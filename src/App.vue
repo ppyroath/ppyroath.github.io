@@ -32,6 +32,18 @@ import { ref, onMounted } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import Footer from './components/Footer.vue';
+import pyroathIcon from './assets/images/pyroath.svg';
+
+const setFavicon = () => {
+  let link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
+  if (!link) {
+    link = document.createElement('link');
+    link.rel = 'shortcut icon';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
+  link.type = 'image/svg+xml';
+  link.href = pyroathIcon;
+};
 
 // --- drak mode logic ---
 const isDarkMode = ref(false);
@@ -42,6 +54,7 @@ const toggleDarkMode = () => {
 };
 
 onMounted(() => {
+  setFavicon();
   //load theme from localStorage
   const savedTheme = localStorage.getItem('theme');
   if (savedTheme === 'dark' || (savedTheme === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
