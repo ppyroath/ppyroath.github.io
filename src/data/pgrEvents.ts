@@ -12,7 +12,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Lamento di Phantasma",
     startTime: "2025-08-06T09:00:00Z",
     endTime: "2025-09-19T01:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/515493103_1086611993595974_7020343093720168029_n.jpg?_nc_cat=100&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeF0dRK5JChfIBTB2rpdYy7QWGqOwlUx4wlYao7CVTHjCcYFUMQWJWyVipCNZGMlYpsnLDcblu9DcH369RcOjZZ2&_nc_ohc=EE18VPeUPq4Q7kNvwFJrWUk&_nc_oc=Adk4-_jRljYW7AEqGi8iuQRTK0U3mIRKX9cLFrTkdXEL3GVncWoIPAql8_aXgdWVXXk&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=AmnemajKd0eATn_v12esiQ&oh=00_AfXJIPBqhlFFvY3IYYEIMdYZZaq46Lm_U_ng5O_g1Obn_g&oe=6898CEF8",
+    image: new URL('../assets/pgr/images/lamento-di-phantasma.jpg', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/2999",
     description: "New collab event , new character: Vergil and Dante. Click for more details."
   },
@@ -20,7 +20,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Dream Till The Timeless End",
     startTime: "2025-06-25T09:00:00Z",
     endTime: "2025-08-06T01:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/506484138_1055238443399996_2504672648498008058_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=9G_wYAobV80Q7kNvwEJ8uIC&_nc_oc=Adk3s_S1dp1RxF1hLbIctz2U5L4ISTWrhM_mALgWdc0Tkd1Efq_j-OijJgWxCUkvaQA&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=y70mWEpONI2p9JkeRXU7lA&oh=00_AfV8H18QcLpxVd4ZVkG0hatpaWEthOeVU6d9U-IGIBLqoA&oe=6898DCAB",
+    image: new URL('../assets/pgr/images/dream-till-the-timeless-end.jpg', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/2835",
     description: "Game engine upgrade, New story chapter, new frames: Pianissimo, Daybreak, Geiravor. Click for more details."
   },
@@ -28,7 +28,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Wither to Shine",
     startTime: "2025-05-14T09:00:00Z",
     endTime: "2025-06-25T01:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/495541961_1027012209555953_6796528347755103143_n.png?stp=dst-jpg_tt6&_nc_cat=101&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=ilXO9Y8E7yYQ7kNvwHs7OwE&_nc_oc=AdlCfawcYbRgneNmQllfnn-wOf7NpaLmte1x5q3V62ED7ep5ytZuJCBHsmcbJlY3vlY&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=9mR8f0asNQBQCn8fFAmQEQ&oh=00_AfVHjiZIjTIpEa2Zq9MiRcKiS7kk9gDI0ZDIQQRyeCL9Yg&oe=6898EC05",
+    image: new URL('../assets/pgr/images/wither-to-shine.jpg', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/2600",
     description: "New story chapter, new frames: Parhelion and Daemonissa. Click for more details."
   },
@@ -36,7 +36,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Shaper's Ripples",
     startTime: "2025-04-02T09:00:00Z",
     endTime: "2025-05-14T01:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/486521795_993994292857745_7813014297491573993_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=v5AXWwfdGMIQ7kNvwEucVsZ&_nc_oc=Adn_qz90Xh7orGoOqp_XrpOzFKVtQy7zg1KKgzq69NGQfUHbUPTK7zvVJweG4y42kx0&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=MLwCg21Hq3_60V8-sTwM7Q&oh=00_AfXF4UxNcebkz-vBtFie0u-yiSw6mInX2fEbN0bwjECyJw&oe=6898ECE9",
+    image: new URL('../assets/pgr/images/shappers-ripples.jpg', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/2393",
     description: "New story chapter, new frames: Pyroath, Startrail, Fulgor. Click for more details."
   },

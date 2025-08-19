@@ -5,7 +5,7 @@ export const wuwaEvents: GameEvent[] = [
     name: "Unfading Melody of Life",
     startTime: "2025-07-24T11:00:00Z",
     endTime: "2025-08-28T03:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/523902649_756071523645743_6966318952608826202_n.png?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeGQWgMoNBeU8fxhMmBv2Ldt9MFLxxYj5LL0wUvHFiPksucEDxRe2V1FyQV19D8SLi5Yj8qiTceJ4Jwc9FFLpJjL&_nc_ohc=U7xcsSXzOtAQ7kNvwGdvohZ&_nc_oc=Adm3YuuuQkHObU4WwufW2U3cbFFMl_CN6BJmhczFs-Y13fPRxVVgT4CO1lmOiHE0lns&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=fbTghDzkB8jvc32rv1omcQ&oh=00_AfWU6Y3DkqZCUEfTy9wdTelZMBUAq5Db2TBB5bSW-3eMmw&oe=68990C47",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1753200000000/aroozd4a6ojkptpi2t-1753260826807.png",
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/2966",
     description: "Version 2.5 update. Click for more details."
   },
@@ -13,7 +13,7 @@ export const wuwaEvents: GameEvent[] = [
     name: "Lightly We Toss the Crown",
     startTime: "2025-06-12T11:00:00Z",
     endTime: "2025-07-24T03:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/506627737_723904416862454_482212817227919553_n.png?stp=dst-jpg_tt6&_nc_cat=111&ccb=1-7&_nc_sid=86c6b0&_nc_eui2=AeGNxTl-wrIzy967wdJcf46oIJU7FF9QtOwglTsUX1C07APyaLyD8DnyLqaS7u7tm2mz2joExUAuWLi6lmZRQRmo&_nc_ohc=qfje6qNlk-UQ7kNvwGLuy8K&_nc_oc=AdnOn5JXmUimdvn3J1AAAwopHZdPBfOu4HFW_ryQnbdb51F8zmhYr-4laKrZeQ1xTvI&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=9mjkH0mN_aYbyc0nGdhXRQ&oh=00_AfXknhJ0rebOoBziNfownKlZtF4cnp6rWT7qqxxYYcQpMg&oe=6898EF75",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1749571200000/brlrrwuqlboavoic3r-1749648767394.jpg",
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/2801",
     description: "Version 2.4 update. Click for more details."
   },
@@ -37,7 +37,7 @@ export const wuwaEvents: GameEvent[] = [
     name: "Waves Sing, and the Cerulean Bird Calls",
     startTime: "2025-02-13T11:00:00Z",
     endTime: "2025-03-27T03:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/477662633_635728295680067_4855656662018065358_n.png?stp=dst-jpg_tt6&_nc_cat=103&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=U15ugylSgzkQ7kNvwH6diOB&_nc_oc=AdlJIpyGKduKQEbClBNTXKZku1EOI69kdYQl0DiDFu8aIexRPDWHRuvxMnPwQ8ZoFHE&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=lkOkf3dVlRAKvb9OwHCRKQ&oh=00_AfUtueDXaiBTXlS3KpmbL4HTkZK06DFmAw2X2gh3jE8Cng&oe=689CB8B8",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1739376000000/98tlotj2e2cvrnmyj8-1739410870133.jpg",
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/2154",
     description: "Version 2.1 update. Click for more details."
   },
@@ -45,7 +45,7 @@ export const wuwaEvents: GameEvent[] = [
     name: "All Silent Souls Can Sing",
     startTime: "2025-01-02T11:00:00Z",
     endTime: "2025-02-13T03:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/472217030_608077838442310_222401296008174271_n.png?_nc_cat=102&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=UBFR78WOBE0Q7kNvwFi9E8C&_nc_oc=AdnkEXivvZ3V7oFkgBIx2yX9mRHH5nVy75wfr8TZTDyXv1INGRyoeSzWgHDdtqLRLrs&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=-AMMmTBwPrIjUJx2ctd1NA&oh=00_AfVKgSGpg9V0mRhhEGralhf_CtYnT4J7kARUgObIOuyE5g&oe=689C9CA3",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1735574400000/tuhlank3b1pt0258z2-1735652832463.jpg",
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/1912",
     description: "Version 2.0 update. Click for more details."
   },
@@ -53,7 +53,7 @@ export const wuwaEvents: GameEvent[] = [
     name: "When the Night Knocks",
     startTime: "2024-11-14T11:00:00Z",
     endTime: "2025-01-02T03:59:59Z",
-    image: "https://scontent.fbdo2-1.fna.fbcdn.net/v/t39.30808-6/466854233_574529921797102_6533239428635172754_n.png?_nc_cat=105&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=vOPoAuXnuHgQ7kNvwEuY_ce&_nc_oc=AdmzxhILPStlksdEaMfzBNtV7xWAHsw7Rms4RqEvnl2GNl1hE_3yhu289dOZ32KjaW0&_nc_zt=23&_nc_ht=scontent.fbdo2-1.fna&_nc_gid=Gq2DQ2NGhRYTr0gKw7cNAQ&oh=00_AfW6S0izMqOxcwELe5OLIHBvkPrhm_ODg2EwL9853bOlMA&oe=689CA8B8",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/akiwebsite/website2.0/images/1731340800000/mlv4yv5dthpq0q8hvh-1731404711547.png",
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/1647",
     description: "Version 1.4 update. Click for more details."
   },
