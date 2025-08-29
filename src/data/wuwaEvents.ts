@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "By Sun's Scourge, By Moon's Revelation",
+    startTime: "2025-08-28T11:00:00Z",
+    endTime: "2025-10-09T03:59:59Z",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1756224000000/fp7wln77nnln60tkix-1756279485353.jpg",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/3194",
+    description: "Version 2.6 update. Click for more details."
+  },
+  {
     name: "Unfading Melody of Life",
     startTime: "2025-07-24T11:00:00Z",
     endTime: "2025-08-28T03:59:59Z",
