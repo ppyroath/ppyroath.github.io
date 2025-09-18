@@ -9,6 +9,14 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Through the Tide Home",
+    startTime: "2025-09-19T09:00:00Z",
+    endTime: "2025-11-12T01:59:59Z",
+    image: new URL('../assets/pgr/images/through-the-tide-home.jpg', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/3301",
+    description: "New story chapter, new frame: Crepuscule, Secator, and Aegis. Click for more details."
+  },
+  {
     name: "Lamento di Phantasma",
     startTime: "2025-08-06T09:00:00Z",
     endTime: "2025-09-19T01:59:59Z",
