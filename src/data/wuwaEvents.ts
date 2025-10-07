@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "Dawn Breaks on Dark Tides",
+    startTime: "2025-10-09T11:00:00Z",
+    endTime: "2025-11-20T03:59:59Z",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1759075200000/tov8afcqytwjz8dclf-1759139442869.jpg",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/3332",
+    description: "Version 2.7 update. Click for more details."
+  },
+  {
     name: "By Sun's Scourge, By Moon's Revelation",
     startTime: "2025-08-28T11:00:00Z",
     endTime: "2025-10-09T03:59:59Z",
