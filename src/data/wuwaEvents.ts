@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "To the City Set in Amber",
+    startTime: "2025-11-20T11:00:00Z",
+    endTime: "2025-12-25T03:59:59Z",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1763049600000/80lk8p3zq0f06k7meo-1763102612556.jpg",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/3613",
+    description: "Version 2.8 update. Click for more details."
+  },
+  {
     name: "Dawn Breaks on Dark Tides",
     startTime: "2025-10-09T11:00:00Z",
     endTime: "2025-11-20T03:59:59Z",

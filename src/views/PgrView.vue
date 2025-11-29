@@ -13,7 +13,7 @@ import { pgrEvents } from '../data/pgrEvents';
 const pgrServerConfig = {
   name: 'Global',
   timezone: 'Etc/UTC',
-  dailyReset: '07:00',
+  dailyReset: '05:00',
 };
 </script>
 
