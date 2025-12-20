@@ -9,6 +9,14 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Sightline Breach",
+    startTime: "2025-12-23T05:00:00Z",
+    endTime: "2026-02-03T01:59:59Z",
+    image: new URL('../assets/pgr/images/sightline-breach.jpg', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/3829",
+    description: "New story chapter, new frame: Spectre. Click for more details."
+  },
+  {
     name: "Where Nightmares Dwell",
     startTime: "2025-11-13T05:00:00Z",
     endTime: "2025-12-22T01:59:59Z",
