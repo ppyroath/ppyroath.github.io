@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "We Who See the Stars",
+    startTime: "2025-12-25T11:00:00Z",
+    endTime: "2026-02-05T03:59:59Z",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1766332800000/86h1z00zh5e2btxegm-1766389137304.jpg",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/3843",
+    description: "Version 3.0 update. Click for more details."
+  },
+  {
     name: "To the City Set in Amber",
     startTime: "2025-11-20T11:00:00Z",
     endTime: "2025-12-25T03:59:59Z",
