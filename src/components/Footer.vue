@@ -1,6 +1,6 @@
 <template>
   <footer class="app-footer">
-    <p>&Omicron; 2025 Pyroath</p>
+    <p>&Omicron; 2026 Pyroath</p>
     <p>
       Not affiliated with Kuro Games. All assets belong to their respective owners.
     </p>
