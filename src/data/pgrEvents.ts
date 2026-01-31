@@ -9,6 +9,14 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Withering Crown",
+    startTime: "2026-02-03T05:00:00Z",
+    endTime: "2026-03-16T01:59:59Z",
+    image: new URL('../assets/pgr/images/withering-crown.png', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/4130",
+    description: "New story chapter, new frame: Arete, Steam version release. Click for more details."
+  },
+  {
     name: "Sightline Breach",
     startTime: "2025-12-23T05:00:00Z",
     endTime: "2026-02-03T01:59:59Z",
