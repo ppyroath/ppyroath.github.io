@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "For You Who Walk in Snow",
+    startTime: "2026-02-05T11:00:00Z",
+    endTime: "2026-03-19T03:59:59Z",
+    image: "https://hw-media-cdn-mingchao.kurogame.com/object/1769961600000/9l0l4vpkm46exny0fq-1770019241868.jpg",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4156",
+    description: "Version 3.1 update. Click for more details."
+  },
+  {
     name: "We Who See the Stars",
     startTime: "2025-12-25T11:00:00Z",
     endTime: "2026-02-05T03:59:59Z",
