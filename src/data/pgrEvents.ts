@@ -9,6 +9,14 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "A Better Tomorrow",
+    startTime: "2026-03-17T05:00:00Z",
+    endTime: "2026-04-20T01:59:59Z",
+    image: new URL('../assets/pgr/images/a-better-tomorrow.jpg', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/4398",
+    description: "New story chapter, new frame: Arete. Click for more details."
+  },
+  {
     name: "Withering Crown",
     startTime: "2026-02-03T05:00:00Z",
     endTime: "2026-03-16T01:59:59Z",
