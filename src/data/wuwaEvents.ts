@@ -6,7 +6,7 @@ export const wuwaEvents: GameEvent[] = [
     startTime: "2026-03-19T11:00:00Z",
     endTime: "2026-04-30T03:59:59Z",
     image: "https://hw-media-cdn-mingchao.kurogame.com/object/1773331200000/9c3ny1iq1xy0mrepna-1773404026841.png",
-    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4380",
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4418",
     description: "Version 3.2 update. Click for more details."
   },
   {
