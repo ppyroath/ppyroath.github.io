@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="local-time-display">
+    <!--div class="local-time-display">
       <span class="label">Your Local Time:</span>
       <span class="value">{{ localTime }}</span>
       <span class="date-value">({{ localDate }})</span>
-    </div>
+    </div-->
     <div class="time-info-card">
       <div class="time-grid">
         <div class="time-item">
@@ -108,7 +108,6 @@ onUnmounted(() => {
   margin-right: 8px;
 }
 .local-time-display .value {
-  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
   margin-right: 8px;
 }
@@ -146,7 +145,6 @@ onUnmounted(() => {
 .value {
   font-size: 1.5em;
   color: var(--text-color-primary);
-  font-family: 'Courier New', Courier, monospace;
   font-weight: bold;
 }
 </style>
