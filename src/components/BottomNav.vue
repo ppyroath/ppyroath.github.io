@@ -1,23 +1,35 @@
 <template>
   <nav class="bottom-nav">
+
+    <!-- Home -->
     <router-link to="/" class="nav-item" :class="{ active: isActive('/') }">
-      <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M10 20v-6h4v6h5v-8h3L12 2 2 12h3v8z"/>
-      </svg>
+      <div class="nav-indicator">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path v-if="isActive('/')"
+            d="M10 20v-6h4v6h5v-8h3L12 2 2 12h3v8z" />
+          <path v-else
+            d="M12 2.1L2 12h3v8h6v-5h2v5h6v-8h3L12 2.1zm0 2.83L19 12h-1v7h-4v-5H10v5H6v-7H5L12 4.93z" />
+        </svg>
+      </div>
       <span class="nav-label">Home</span>
     </router-link>
-    
-    <router-link to="/pgr" class="nav-item" :class="{ active: isActive('/pgr') }">
-      <img v-if="isActive('/pgr')" src="../assets/images/pgr-logo.svg" class="nav-logo" alt="PGR">
-      <span v-else class="nav-text">PGR</span>
+
+    <!-- PGR -->
+    <router-link to="/pgr" class="nav-item nav-item--pgr" :class="{ active: isActive('/pgr') }">
+      <div class="nav-indicator">
+        <span class="logo-mask logo-mask--pgr nav-logo-icon" aria-hidden="true"></span>
+      </div>
       <span class="nav-label">PGR</span>
     </router-link>
-    
-    <router-link to="/wuwa" class="nav-item" :class="{ active: isActive('/wuwa') }">
-      <img v-if="isActive('/wuwa')" src="../assets/images/wuwa-logo.svg" class="nav-logo" alt="WuWa">
-      <span v-else class="nav-text">WuWa</span>
+
+    <!-- WuWa -->
+    <router-link to="/wuwa" class="nav-item nav-item--wuwa" :class="{ active: isActive('/wuwa') }">
+      <div class="nav-indicator">
+        <span class="logo-mask logo-mask--wuwa nav-logo-icon" aria-hidden="true"></span>
+      </div>
       <span class="nav-label">WuWa</span>
     </router-link>
+
   </nav>
 </template>
 
@@ -27,9 +39,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 
 const isActive = (path: string) => {
-  if (path === '/') {
-    return route.path === '/';
-  }
+  if (path === '/') return route.path === '/';
   return route.path.startsWith(path);
 };
 </script>
@@ -42,11 +52,11 @@ const isActive = (path: string) => {
   right: 0;
   display: flex;
   justify-content: space-around;
-  align-items: center;
-  height: 64px;
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
+  align-items: stretch;
+  height: 80px;
   padding-bottom: env(safe-area-inset-bottom, 0);
+  background: var(--md-surface-container);
+  border-top: 1px solid var(--md-outline-variant);
   z-index: 100;
 }
 
@@ -56,19 +66,42 @@ const isActive = (path: string) => {
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 8px 0;
-  color: var(--text-secondary);
   text-decoration: none;
+  color: var(--md-on-surface-variant);
+  gap: 4px;
+  padding: 10px 4px 8px;
   transition: color 0.2s ease;
-  min-height: 48px;
 }
 
 .nav-item.active {
-  color: var(--accent-wuwa);
+  color: var(--md-on-surface);
 }
 
-.nav-item.active[href*="pgr"] {
-  color: var(--accent-pgr);
+.nav-item--pgr.active {
+  color: var(--pgr-primary);
+}
+.nav-item--wuwa.active {
+  color: var(--wuwa-primary);
+}
+
+.nav-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  transition: background 0.25s ease;
+}
+
+.nav-item.active .nav-indicator {
+  background: var(--md-primary-container);
+}
+.nav-item--pgr.active .nav-indicator {
+  background: var(--pgr-primary-container);
+}
+.nav-item--wuwa.active .nav-indicator {
+  background: var(--wuwa-primary-container);
 }
 
 .nav-icon {
@@ -76,22 +109,25 @@ const isActive = (path: string) => {
   height: 24px;
 }
 
-.nav-logo {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
+.nav-logo-icon {
+  width: 22px;
+  height: 22px;
 }
 
-.nav-text {
-  font-size: 14px;
-  font-weight: 600;
-  opacity: 0;
-  position: absolute;
+.logo-mask--pgr {
+  -webkit-mask-image: url('../assets/images/pgr-logo.svg');
+  mask-image: url('../assets/images/pgr-logo.svg');
+}
+
+.logo-mask--wuwa {
+  -webkit-mask-image: url('../assets/images/wuwa-logo.svg');
+  mask-image: url('../assets/images/wuwa-logo.svg');
 }
 
 .nav-label {
-  font-size: 10px;
-  margin-top: 2px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
 }
 </style>

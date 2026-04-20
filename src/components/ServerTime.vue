@@ -1,24 +1,17 @@
 <template>
-  <div>
-    <!--div class="local-time-display">
-      <span class="label">Your Local Time:</span>
-      <span class="value">{{ localTime }}</span>
-      <span class="date-value">({{ localDate }})</span>
-    </div-->
-    <div class="time-info-card">
-      <div class="time-grid">
-        <div class="time-item">
-          <span class="label">{{ config.name }} Server Time</span>
-          <span class="value">{{ serverTime }}</span>
-        </div>
-        <div class="time-item">
-          <span class="label">Local Reset Time</span>
-          <span class="value">{{ localResetTime }}</span>
-        </div>
-        <div class="time-item">
-          <span class="label">Daily Reset In</span>
-          <span class="value">{{ timeUntilReset }}</span>
-        </div>
+  <div class="server-time-card">
+    <div class="time-grid">
+      <div class="time-item">
+        <span class="time-label">{{ config.name }} Server</span>
+        <span class="time-value">{{ serverTime }}</span>
+      </div>
+      <div class="time-item">
+        <span class="time-label">Local Reset</span>
+        <span class="time-value">{{ localResetTime }}</span>
+      </div>
+      <div class="time-item">
+        <span class="time-label">Reset In</span>
+        <span class="time-value time-value--accent">{{ timeUntilReset }}</span>
       </div>
     </div>
   </div>
@@ -47,8 +40,6 @@ const props = defineProps<{
   config: ServerConfig;
 }>();
 
-const localTime = ref('');
-const localDate = ref('');
 const serverTime = ref('');
 const timeUntilReset = ref('');
 let intervalId: number;
@@ -69,14 +60,11 @@ const nextResetTime = computed(() => {
 });
 
 const localResetTime = computed(() => {
-  return nextResetTime.value.local().format('HH:mm:ss');
+  return nextResetTime.value.local().format('HH:mm');
 });
 
 const updateTimes = () => {
   const now = dayjs();
-  localTime.value = now.format('HH:mm:ss');
-  localDate.value = now.format('YYYY-MM-DD');
-
   const nowInServerTz = now.tz(props.config.timezone);
   serverTime.value = nowInServerTz.format('HH:mm:ss');
 
@@ -96,55 +84,51 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.local-time-display {
-  text-align: center;
-  margin-bottom: 15px;
-  font-size: 1.1em;
-  color: var(--text-color-secondary);
-}
-.local-time-display .label {
-  font-weight: bold;
-  color: var(--text-color-primary);
-  margin-right: 8px;
-}
-.local-time-display .value {
-  font-weight: bold;
-  margin-right: 8px;
-}
-.local-time-display .date-value {
-  font-size: 0.9em;
-}
-
-.time-info-card {
-  background: var(--content-bg);
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+.server-time-card {
+  background: var(--md-surface-container);
+  border-radius: var(--radius-xl);
+  padding: 20px 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--elev-1);
 }
 
 .time-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
   text-align: center;
 }
 
 .time-item {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
-.label {
-  font-size: 0.9em;
-  color: var(--text-color-secondary);
-  margin-bottom: 5px;
-  font-weight: bold;
+.time-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--md-on-surface-variant);
+  line-height: 1.2;
 }
 
-.value {
-  font-size: 1.5em;
-  color: var(--text-color-primary);
-  font-weight: bold;
+.time-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--md-on-surface);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.time-value--accent {
+  color: var(--md-primary);
+}
+
+@media (max-width: 360px) {
+  .time-value {
+    font-size: 1rem;
+  }
 }
 </style>

@@ -1,38 +1,83 @@
 <template>
   <div class="event-list-container">
+
+    <!-- Ongoing -->
     <div v-if="ongoingEvents.length > 0" class="event-category">
-      <h2>Ongoing</h2>
-      <EventItem v-for="event in ongoingEvents" :key="event.name" :event="event" :now="currentTime" :timezone="props.timezone" :serverTimezone="props.serverTimezone" />
+      <div class="category-header">
+        <span class="category-chip category-chip--ongoing">
+          <span class="chip-dot"></span>
+          Ongoing
+        </span>
+        <span class="event-count">{{ ongoingEvents.length }}</span>
+      </div>
+      <EventItem
+        v-for="event in ongoingEvents"
+        :key="event.name"
+        :event="event"
+        :now="currentTime"
+        :timezone="props.timezone"
+        :serverTimezone="props.serverTimezone"
+      />
     </div>
+
+    <!-- Upcoming -->
     <div class="event-category">
       <div class="category-header">
-        <h2>Upcoming</h2>
+        <span class="category-chip category-chip--upcoming">
+          <span class="chip-dot"></span>
+          Upcoming
+        </span>
+        <span class="event-count">{{ upcomingEvents.length }}</span>
       </div>
       <div v-if="upcomingEvents.length > 0">
-        <EventItem v-for="event in upcomingEvents" :key="event.name" :event="event" :now="currentTime" :timezone="props.timezone" :serverTimezone="props.serverTimezone" />
+        <EventItem
+          v-for="event in upcomingEvents"
+          :key="event.name"
+          :event="event"
+          :now="currentTime"
+          :timezone="props.timezone"
+          :serverTimezone="props.serverTimezone"
+        />
       </div>
       <div v-else class="no-events-message">
-        <p>No upcoming events at the moment.</p>
+        <p>No upcoming events right now.</p>
       </div>
     </div>
+
+    <!-- Past -->
     <div v-if="pastEvents.length > 0" class="event-category">
       <div class="category-header">
-        <h2>Past</h2>
-        <button @click="showPastEvents = !showPastEvents" class="toggle-past-btn">
+        <span class="category-chip category-chip--past">
+          <span class="chip-dot"></span>
+          Past
+        </span>
+        <button @click="showPastEvents = !showPastEvents" class="toggle-btn">
           {{ showPastEvents ? 'Hide' : 'Show' }}
         </button>
       </div>
-      <transition name="fade">
-        <div v-if="showPastEvents" class="past-events-grid">
-          <EventItem v-for="event in pastEvents" :key="event.name" :event="event" :now="currentTime" :timezone="props.timezone" :serverTimezone="props.serverTimezone" />
+
+      <div class="past-grid-outer" ref="pastGridOuter" :style="pastWrapStyle">
+        <div class="past-events-grid" ref="pastGridEl" :style="pastGridStyle">
+          <EventItem
+            v-for="event in pastEvents"
+            :key="event.name"
+            :event="event"
+            :now="currentTime"
+            :timezone="props.timezone"
+            :serverTimezone="props.serverTimezone"
+          />
         </div>
-      </transition>
+      </div>
     </div>
+
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import {
+  ref, computed, onMounted, onUnmounted,
+  nextTick, watch, watchEffect,
+} from 'vue';
 import type { GameEvent } from '../data/pgrEvents';
 import EventItem from './EventItem.vue';
 import dayjs from 'dayjs';
@@ -43,8 +88,8 @@ const props = defineProps<{
   serverTimezone: string;
 }>();
 
+// ── Timer ────────────────────────────────────────────────
 const showPastEvents = ref(false);
-
 const currentTime = ref(dayjs());
 let timer: number;
 
@@ -56,120 +101,207 @@ onMounted(() => {
 
 onUnmounted(() => {
   clearInterval(timer);
+  pastRO?.disconnect();
 });
 
-const sortedEvents = computed(() => 
+// ── Event buckets ────────────────────────────────────────
+const sortedEvents = computed(() =>
   [...props.events].sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)))
 );
 
-const ongoingEvents = computed(() => 
+const ongoingEvents = computed(() =>
   sortedEvents.value.filter(e => {
     const start = dayjs(e.startTime);
-    const end = dayjs(e.endTime);
+    const end   = dayjs(e.endTime);
     return currentTime.value.isAfter(start) && currentTime.value.isBefore(end);
   })
 );
 
-const upcomingEvents = computed(() => 
+const upcomingEvents = computed(() =>
   sortedEvents.value.filter(e => dayjs(e.startTime).isAfter(currentTime.value))
 );
 
-const pastEvents = computed(() => 
-  sortedEvents.value.filter(e => dayjs(e.endTime).isBefore(currentTime.value))
-    .sort((a, b) => dayjs(b.endTime).diff(dayjs(a.endTime))) //show most recently ended first
+const pastEvents = computed(() =>
+  sortedEvents.value
+    .filter(e => dayjs(e.endTime).isBefore(currentTime.value))
+    .sort((a, b) => dayjs(b.endTime).diff(dayjs(a.endTime)))
 );
 
+// ── Past grid proportional scaling ──────────────────────
+const PAST_GRID_REF_WIDTH = 700;
+
+const pastGridOuter = ref<HTMLElement | null>(null);
+const pastGridEl    = ref<HTMLElement | null>(null);
+const pastScale     = ref(1);
+const pastWrapHeight = ref(0);
+let   pastRO: ResizeObserver | null = null;
+
+const updatePastScale = () => {
+  if (!pastGridOuter.value || !pastGridEl.value) return;
+
+  const availW = pastGridOuter.value.clientWidth;
+  const scale  = Math.min(1, availW / PAST_GRID_REF_WIDTH);
+  pastScale.value = scale;
+
+  const naturalH = pastGridEl.value.scrollHeight;
+  pastWrapHeight.value = Math.ceil(naturalH * scale);
+};
+
+const pastGridStyle = computed(() => {
+  if (pastScale.value >= 1) {
+    return { width: '100%' };
+  }
+  return {
+    width:           `${PAST_GRID_REF_WIDTH}px`,
+    transformOrigin: 'top left',
+    transform:       `scale(${pastScale.value})`,
+  };
+});
+
+const pastWrapStyle = computed(() => ({
+  height:     showPastEvents.value ? `${pastWrapHeight.value}px` : '0px',
+  opacity:    showPastEvents.value ? '1' : '0',
+  overflow:   'hidden',
+  transition: 'height 0.35s ease, opacity 0.25s ease',
+}));
+
+watchEffect(() => {
+  if (pastGridOuter.value && !pastRO) {
+    pastRO = new ResizeObserver(updatePastScale);
+    pastRO.observe(pastGridOuter.value);
+    updatePastScale();
+  }
+});
+
+watch(showPastEvents, async (visible) => {
+  if (visible) {
+    await nextTick();
+    updatePastScale();
+  }
+});
 </script>
 
 <style scoped>
-.no-events-message {
-  text-align: center;
-  padding: 40px;
-  background-color: var(--content-bg-alt);
-  border-radius: 8px;
-  margin-top: 20px;
-  color: var(--text-color-secondary);
-}
-
 .event-list-container {
   max-width: 800px;
   margin: 0 auto;
 }
 
-.event-category h2 {
-  font-size: 1.5em;
-  color: var(--text-color-primary);
-  padding-bottom: 10px;
-  margin: 0;
+.event-category {
+  margin-bottom: 24px;
 }
 
 .category-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid var(--border-color);
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
-.toggle-past-btn {
-  background: var(--button-bg);
-  color: var(--button-text);
-  border: 1px solid var(--border-color);
-  padding: 5px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
-.toggle-past-btn:hover {
-  background: var(--hover-bg);
+
+.chip-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.category-chip--ongoing {
+  background: color-mix(in srgb, var(--md-primary) 16%, transparent);
+  color: var(--md-primary);
+}
+.category-chip--ongoing .chip-dot {
+  background: var(--md-primary);
+  box-shadow: 0 0 6px var(--md-primary);
+}
+
+.category-chip--upcoming {
+  background: rgba(255, 179, 71, 0.14);
+  color: #ffb347;
+}
+.category-chip--upcoming .chip-dot {
+  background: #ffb347;
+}
+
+.category-chip--past {
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+}
+.category-chip--past .chip-dot {
+  background: var(--md-on-surface-dim);
+}
+
+.event-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-on-surface-dim);
+  background: var(--md-surface-container-high);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.toggle-btn {
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--md-surface-container-high);
+  color: var(--md-on-surface-variant);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.toggle-btn:hover {
+  background: var(--md-surface-container-highest);
+  color: var(--md-on-surface);
+}
+
+.no-events-message {
+  text-align: center;
+  padding: 32px;
+  background: var(--md-surface-container-low);
+  border-radius: var(--radius-lg);
+  color: var(--md-on-surface-variant);
+  font-size: 14px;
+}
+
+.past-grid-outer {
+  width: 100%;
 }
 
 .past-events-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+  gap: 12px;
   align-items: stretch;
 }
-
 
 .past-events-grid :deep(.event-link) {
   margin-bottom: 0;
 }
-.past-events-grid :deep(.event-image-banner) {
-  height: 100px;
+
+.past-events-grid :deep(.event-item) {
+  min-height: 170px;
 }
-.past-events-grid :deep(.event-content) {
-  padding: 12px;
-}
+
 .past-events-grid :deep(.event-name) {
-  font-size: 1em;
-  margin-bottom: 5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
+
 .past-events-grid :deep(.event-description) {
-  font-size: 0.85em;
-  margin-bottom: 8px;
-}
-.past-events-grid :deep(.event-timer) {
-  font-size: 1em;
-  margin-bottom: 8px;
-}
-.past-events-grid :deep(.event-duration) {
-  font-size: 0.8em;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-@media (max-width: 600px) {
-  .past-events-grid {
-    grid-template-columns: 1fr;
-  }
+  -webkit-line-clamp: 1;
 }
 </style>

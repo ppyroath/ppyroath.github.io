@@ -1,30 +1,48 @@
 <template>
   <a :href="event.link" target="_blank" rel="noopener noreferrer" class="event-link">
     <div class="event-item" :class="statusClass">
-      <div :style="status === 'past' ? { backgroundImage: 'url(' + event.image + ')', backgroundSize: 'cover', backgroundPosition: 'center' } : {}" :class="status === 'past' ? 'event-bg-banner' : ''">
-        <img v-if="status !== 'past'" :src="event.image" :alt="event.name" class="event-image-banner" />
+
+      <!-- banner image -->
+      <div class="event-banner">
+        <img
+          :src="event.image"
+          :alt="event.name"
+          class="event-image-banner"
+          :class="{ 'event-image-banner--past': status === 'past' }"
+        />
+        <div class="event-overlay" :class="{ 'event-overlay--past': status === 'past' }"></div>
       </div>
-      <div v-if="status !== 'past'" class="event-overlay"></div>
+
+      <!-- content -->
       <div class="event-content">
+        <!-- status badge -->
+        <div class="status-badge" :class="`status-badge--${status}`">
+          {{ statusBadgeLabel }}
+        </div>
         <div class="event-name">{{ event.name }}</div>
         <p class="event-description">{{ event.description }}</p>
+
         <div class="event-timer">
-          <span class="timer-label">{{ timerLabel }}:</span> <span class="timer-value">{{ formattedTimer }}</span>
+          <span class="timer-label">{{ timerLabel }}</span>
+          <span class="timer-value" :class="`timer-value--${status}`">{{ formattedTimer }}</span>
         </div>
+
         <div v-if="status === 'ongoing'" class="progress-bar-container">
           <div class="progress-bar" :style="{ width: progress + '%' }"></div>
         </div>
+
         <div class="event-duration">
           <div class="time-row">
-            <span class="time-label">Server:</span>
-            <span class="time-value">{{ formatServerTime(event.startTime) }} ~ {{ formatServerTime(event.endTime) }}</span>
+            <span class="time-label">Server</span>
+            <span class="time-value">{{ formatServerTime(event.startTime) }} – {{ formatServerTime(event.endTime) }}</span>
           </div>
           <div class="time-row">
-            <span class="time-label">Local:</span>
-            <span class="time-value">{{ formatLocalTime(event.startTime) }} ~ {{ formatLocalTime(event.endTime) }}</span>
+            <span class="time-label">Local</span>
+            <span class="time-value">{{ formatLocalTime(event.startTime) }} – {{ formatLocalTime(event.endTime) }}</span>
           </div>
         </div>
       </div>
+
     </div>
   </a>
 </template>
@@ -60,12 +78,21 @@ const status = computed(() => {
 
 const statusClass = computed(() => 'status-' + status.value);
 
+const statusBadgeLabel = computed(() => {
+  switch (status.value) {
+    case 'ongoing':  return 'Ongoing';
+    case 'upcoming': return 'Upcoming';
+    case 'past':     return 'Ended';
+    default:         return '';
+  }
+});
+
 const timerLabel = computed(() => {
   switch (status.value) {
-    case 'ongoing': return 'Ends in';
+    case 'ongoing':  return 'Ends in';
     case 'upcoming': return 'Starts in';
-    case 'past': return 'Ended';
-    default: return '';
+    case 'past':     return 'Ended';
+    default:         return '';
   }
 });
 
@@ -85,7 +112,6 @@ const formattedTimer = computed(() => {
 
   const diff = targetDate.diff(props.now);
   const d = dayjs.duration(diff);
-
   const days = d.days();
   const hours = d.hours();
   const minutes = d.minutes();
@@ -95,7 +121,6 @@ const formattedTimer = computed(() => {
   if (days > 0) result += `${days}d `;
   if (hours > 0 || days > 0) result += `${hours}h `;
   result += `${minutes}m ${seconds}s`;
-
   return result.trim();
 });
 
@@ -118,7 +143,7 @@ const formatServerTime = (date: string) => {
 
 const formatLocalTime = (date: string) => {
   if (props.timezone === 'Etc/UTC') {
-    return dayjs.utc(date).format('MM-DD HH:mm');
+    return dayjs.utc(date).local().format('MM-DD HH:mm');
   }
   const wallTime = date.slice(0, -1);
   return dayjs.tz(wallTime, props.timezone).local().format('MM-DD HH:mm');
@@ -130,36 +155,37 @@ const formatLocalTime = (date: string) => {
   text-decoration: none;
   color: inherit;
   display: block;
-  margin-bottom: 16px;
-  border-radius: 12px;
+  margin-bottom: 14px;
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .event-link:hover {
   transform: translateY(-2px);
+  box-shadow: var(--elev-3);
 }
 
 .event-item {
   position: relative;
-  background: var(--bg-card);
-  border-radius: 12px;
+  background: var(--md-surface-container);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  min-height: 200px;
+}
+
+.event-banner {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
 .event-image-banner {
   width: 100%;
-  aspect-ratio: 16/9;
+  height: 100%;
   object-fit: cover;
+  object-position: center top;
   display: block;
-}
-
-.event-bg-banner {
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
 }
 
 .event-overlay {
@@ -167,118 +193,155 @@ const formatLocalTime = (date: string) => {
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(10, 10, 15, 0.95) 0%,
-    rgba(10, 10, 15, 0.6) 40%,
-    rgba(10, 10, 15, 0.3) 70%,
+    rgba(10, 10, 20, 0.97) 0%,
+    rgba(10, 10, 20, 0.6) 45%,
+    rgba(10, 10, 20, 0.15) 75%,
     transparent 100%
   );
   pointer-events: none;
 }
 
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.status-badge--ongoing {
+  background: color-mix(in srgb, var(--md-primary) 20%, rgba(0,0,0,0.6));
+  color: var(--md-primary);
+  border: 1px solid color-mix(in srgb, var(--md-primary) 40%, transparent);
+}
+
+.status-badge--upcoming {
+  background: rgba(255, 179, 71, 0.18);
+  color: #ffb347;
+  border: 1px solid rgba(255, 179, 71, 0.35);
+}
+
+.status-badge--past {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--md-on-surface-variant);
+  border: 1px solid var(--md-outline-variant);
+}
+
+.event-image-banner--past {
+  filter: grayscale(0.6) brightness(0.65);
+}
+
+.event-overlay--past {
+  background: linear-gradient(
+    to top,
+    rgba(10, 10, 20, 0.98) 0%,
+    rgba(10, 10, 20, 0.72) 45%,
+    rgba(10, 10, 20, 0.35) 75%,
+    rgba(10, 10, 20, 0.15) 100%
+  );
+}
+
 .event-content {
-  padding: 16px;
+  padding: 14px 16px;
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-}
-
-.status-past .event-content {
-  position: relative;
-  background: rgba(0, 0, 0, 0.6);
-  border-radius: 8px;
-  
+  z-index: 1;
 }
 
 .event-name {
   font-weight: 700;
-  font-size: 1.1em;
+  font-size: 1rem;
   margin-bottom: 4px;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
   line-height: 1.3;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
 }
 
 .event-description {
-  font-size: 0.85em;
+  font-size: 0.82em;
   margin-bottom: 8px;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.75);
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 .event-timer {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
   margin-bottom: 8px;
 }
 
 .timer-label {
-  font-size: 0.8em;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
 }
 
 .timer-value {
-  font-size: 1.1em;
+  font-size: 1.05rem;
   font-weight: 700;
-  color: #fff;
+  letter-spacing: -0.01em;
 }
 
-.status-ongoing .timer-value {
-  color: var(--accent-wuwa);
-}
-
-.status-upcoming .timer-value {
-  color: #ff9800;
-}
-
-.status-past .timer-value {
-  color: rgba(255, 255, 255, 0.5);
-}
+.timer-value--ongoing  { color: var(--md-primary); }
+.timer-value--upcoming { color: #ffb347; }
+.timer-value--past     { color: var(--md-on-surface-variant); }
 
 .progress-bar-container {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: var(--radius-full);
   height: 4px;
   overflow: hidden;
   margin-bottom: 8px;
 }
 
 .progress-bar {
-  background: var(--accent-wuwa);
+  background: var(--md-primary);
   height: 100%;
+  border-radius: var(--radius-full);
   transition: width 0.3s ease;
 }
 
 .event-duration {
-  font-size: 0.75em;
-  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .time-row {
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
 }
 
 .time-label {
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
-@media (max-width: 480px) {
-  .event-image-banner {
-    aspect-ratio: 2/1;
-  }
-  
-  .event-content {
-    padding: 12px;
-  }
-  
-  .event-name {
-    font-size: 1em;
-  }
-  
-  .event-description {
-    font-size: 0.8em;
-  }
+.time-value {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  text-align: right;
 }
+
+.status-past .event-name    { opacity: 0.75; }
+.status-past .event-description { opacity: 0.6; }
+.status-past .timer-label   { opacity: 0.5; }
+.status-past .time-label    { opacity: 0.45; }
+.status-past .time-value    { opacity: 0.5; }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="gameClass">
     <main>
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
@@ -12,9 +12,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import BottomNav from './components/BottomNav.vue';
 import pyroathIcon from './assets/images/pyroath.svg';
+
+const route = useRoute();
+
+const gameClass = computed(() => {
+  if (route.path.startsWith('/wuwa')) return 'game-wuwa';
+  if (route.path.startsWith('/pgr')) return 'game-pgr';
+  return '';
+});
 
 const setFavicon = () => {
   let link = document.querySelector<HTMLLinkElement>("link[rel*='icon']");
@@ -33,19 +42,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-#app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-}
-
-main {
-  flex: 1;
-  padding: 16px;
-  padding-bottom: 80px;
-}
-
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;

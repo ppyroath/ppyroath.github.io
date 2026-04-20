@@ -1,33 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ============================================================
+   Material Design 3 — Pyroath Design System (Dark)
+   ============================================================ */
+
 :root {
-  --accent-color: #42b983;
-  
-  /* Default Dark Theme */
-  --bg-primary: #0a0a0f;
-  --bg-card: #16161f;
-  --bg-card-hover: #1c1c28;
-  --accent-wuwa: #00d4ff;
-  --accent-pgr: #8b2525;
-  --accent-home: #8a8a9a;
-  --accent-settings: #8a8a9a;
-  --text-primary: #e8e8ec;
-  --text-secondary: #8a8a9a;
-  --border: #2a2a3a;
-  --shadow: rgba(0, 0, 0, 0.4);
+  /* --- Surface Scale --- */
+  --md-surface:                   #0f0f14;
+  --md-surface-container-lowest:  #0a0a0e;
+  --md-surface-container-low:     #14141c;
+  --md-surface-container:         #1c1c28;
+  --md-surface-container-high:    #232334;
+  --md-surface-container-highest: #2d2d42;
+
+  /* --- Text on Surface --- */
+  --md-on-surface:         #e5e5f0;
+  --md-on-surface-variant: #8f8fa8;
+  --md-on-surface-dim:     #4a4a60;
+
+  /* --- Outline --- */
+  --md-outline:         #44475a;
+  --md-outline-variant: #26263a;
+
+  /* --- Default Primary (Home / neutral) --- */
+  --md-primary:                 #b0b0d0;
+  --md-primary-container:       #22223a;
+  --md-on-primary:              #0f0f14;
+  --md-on-primary-container:    #d0d0e8;
+
+  /* --- WuWa Palette (Cyan) --- */
+  --wuwa-primary:               #67d4f8;
+  --wuwa-primary-container:     #09374d;
+  --wuwa-on-primary:            #001f2d;
+  --wuwa-on-primary-container:  #b8eaff;
+
+  /* --- PGR Palette (Coral) --- */
+  --pgr-primary:                #f28b82;
+  --pgr-primary-container:      #4a0e0a;
+  --pgr-on-primary:             #2d0300;
+  --pgr-on-primary-container:   #ffdad6;
+
+  /* --- Shape Tokens --- */
+  --radius-xs:   4px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-xl:   20px;
+  --radius-2xl:  28px;
+  --radius-full: 9999px;
+
+  /* --- Elevation --- */
+  --elev-1: 0 1px 2px rgba(0,0,0,.35), 0 1px 3px 1px rgba(0,0,0,.18);
+  --elev-2: 0 1px 2px rgba(0,0,0,.35), 0 2px 6px 2px rgba(0,0,0,.18);
+  --elev-3: 0 4px 8px 3px rgba(0,0,0,.18), 0 1px 3px rgba(0,0,0,.35);
+
+  /* --- State Layers --- */
+  --state-hover:   rgba(255,255,255,.08);
+  --state-pressed: rgba(255,255,255,.12);
 }
 
-.dark-mode {
-  --bg-primary: #0a0a0f;
-  --bg-card: #16161f;
-  --bg-card-hover: #1c1c28;
-  --text-primary: #e8e8ec;
-  --text-secondary: #8a8a9a;
-  --border: #2a2a3a;
+/* Per-game primary token overrides */
+#app.game-wuwa {
+  --md-primary:               var(--wuwa-primary);
+  --md-primary-container:     var(--wuwa-primary-container);
+  --md-on-primary:            var(--wuwa-on-primary);
+  --md-on-primary-container:  var(--wuwa-on-primary-container);
 }
 
-* {
+#app.game-pgr {
+  --md-primary:               var(--pgr-primary);
+  --md-primary-container:     var(--pgr-primary-container);
+  --md-on-primary:            var(--pgr-on-primary);
+  --md-on-primary-container:  var(--pgr-on-primary-container);
+}
+
+/* ============================================================
+   Reset & Base
+   ============================================================ */
+
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Remove mobile tap highlight — M3 uses state-layer ripples instead */
+  -webkit-tap-highlight-color: transparent;
 }
 
 html, body {
@@ -35,38 +91,67 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--md-surface);
+  color: var(--md-on-surface);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--md-surface);
+  color: var(--md-on-surface);
 }
 
 main {
   flex: 1;
   padding: 16px;
-  padding-bottom: 80px;
+  padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px) + 16px);
   max-width: 100%;
   overflow-x: hidden;
 }
 
 a {
-  color: var(--accent-wuwa);
+  color: var(--md-primary);
   text-decoration: none;
 }
 
 button {
   font-family: inherit;
+  cursor: pointer;
 }
 
 input, select, textarea {
   font-family: inherit;
+}
+
+/* ============================================================
+   Global Utility — Game Logo Mask
+   (used in BottomNav, page headers, HomeView)
+   ============================================================ */
+
+.logo-mask {
+  display: inline-block;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+.logo-mask--wuwa {
+  -webkit-mask-image: url('./assets/images/wuwa-logo.svg');
+  mask-image: url('./assets/images/wuwa-logo.svg');
+}
+
+.logo-mask--pgr {
+  -webkit-mask-image: url('./assets/images/pgr-logo.svg');
+  mask-image: url('./assets/images/pgr-logo.svg');
 }
