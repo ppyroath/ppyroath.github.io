@@ -216,13 +216,15 @@ const state = reactive<AscensionCalcState>({
 });
 
 const result = computed(() => {
-  // Fix constraints automatically if user selects invalid options
-  if (state.targetLevel < state.currentLevel) state.targetLevel = state.currentLevel;
+  const safeState = JSON.parse(JSON.stringify(state)) as typeof state;
+  
+  if (safeState.targetLevel < safeState.currentLevel) safeState.targetLevel = safeState.currentLevel;
   for (const key of Object.keys(forteDefs)) {
     const k = key as keyof typeof forteDefs;
-    if (state[k].target < state[k].current) state[k].target = state[k].current;
+    if (safeState[k].target < safeState[k].current) safeState[k].target = safeState[k].current;
   }
-  return calculateAscensionMaterials(state);
+  
+  return calculateAscensionMaterials(safeState);
 });
 </script>
 

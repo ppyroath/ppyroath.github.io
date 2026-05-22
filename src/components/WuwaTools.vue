@@ -83,12 +83,12 @@ const state = reactive<CalculatorState>({
 const result = ref<CalculationResult | null>(null);
 
 const calculate = () => {
-  // basic validation
-  if (state.currentLevel < 1) state.currentLevel = 1;
-  if (state.targetLevel <= state.currentLevel) state.targetLevel = state.currentLevel + 1;
-  if (state.targetLevel > 80) state.targetLevel = 80;
+  const safeState = { ...state };
   
-  result.value = calculateUnionLeveling(state);
+  if (!safeState.currentLevel || safeState.currentLevel < 1) safeState.currentLevel = 1;
+  if (!safeState.targetLevel || safeState.targetLevel > 80) safeState.targetLevel = 80;
+  
+  result.value = calculateUnionLeveling(safeState);
 };
 
 // Real-time calculation
