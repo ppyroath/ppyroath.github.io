@@ -3,12 +3,24 @@
 
     <!-- Page Header -->
     <div class="page-header">
-      <span class="logo-mask logo-mask--pgr page-header__logo" aria-hidden="true"></span>
-      <h1 class="page-title">Punishing: Gray Raven</h1>
+      <div class="page-header-left">
+        <span class="logo-mask logo-mask--pgr page-header__logo" aria-hidden="true"></span>
+        <h1 class="page-title">Punishing: Gray Raven</h1>
+      </div>
+      <div class="view-toggle-wrap">
+        <button class="view-toggle-chip" @click="currentTab = currentTab === 'events' ? 'tools' : 'events'">
+          <svg v-if="currentTab === 'events'" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 9.36l-7.1 7.1a1 1 0 0 1-1.4 0l-2.8-2.8a1 1 0 0 1 0-1.4l7.1-7.1a6 6 0 0 1 9.36-7.94l-3.77 3.77a1 1 0 0 0-.22.18z"></path></svg>
+          <svg v-else viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          {{ currentTab === 'events' ? 'Switch to Tools' : 'Switch to Events' }}
+        </button>
+      </div>
     </div>
 
     <!-- Server Time Card -->
     <ServerTime :config="pgrServerConfig" />
+
+    <!-- EVENTS TAB CONTENT -->
+    <template v-if="currentTab === 'events'">
 
     <!-- Show My Local Time Toggle -->
     <div class="browser-time-toggle">
@@ -22,6 +34,12 @@
 
     <!-- Event List -->
     <EventList :events="pgrEvents" :timelineData="pgrTimelineData" timezone="Etc/UTC" serverTimezone="UTC" :showBrowserTime="showBrowserTime" gameTimezone="Etc/UTC" />
+    </template>
+
+    <!-- TOOLS TAB CONTENT -->
+    <template v-if="currentTab === 'tools'">
+      <PgrTools />
+    </template>
 
   </div>
 </template>
@@ -30,6 +48,7 @@
 import { ref, watch, onMounted } from 'vue';
 import EventList from '../components/EventList.vue';
 import ServerTime from '../components/ServerTime.vue';
+import PgrTools from '../components/PgrTools.vue';
 import { pgrEvents } from '../data/pgrEvents';
 import { pgrTimelineData } from '../data/pgrTimeline';
 
@@ -40,6 +59,7 @@ const pgrServerConfig = {
 };
 
 const showBrowserTime = ref(false);
+const currentTab = ref('events');
 
 onMounted(() => {
   const saved = localStorage.getItem('pgrShowBrowserTime');
@@ -59,8 +79,15 @@ watch(showBrowserTime, (v) => {
 .page-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
   margin-bottom: 16px;
+  gap: 12px;
+}
+
+.page-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .page-header__logo {
@@ -80,7 +107,31 @@ watch(showBrowserTime, (v) => {
   font-weight: 700;
   color: var(--md-on-surface);
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
+
+/* ── View Toggle Chip ── */
+.view-toggle-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--md-surface-container-high);
+  border: 1px solid var(--md-outline-variant);
+  color: var(--md-on-surface);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.view-toggle-chip:hover {
+  background: var(--md-surface-container-highest);
+  border-color: var(--md-outline);
+}
+
 
 /* ── Browser-time toggle ── */
 .browser-time-toggle {

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PGR S-Rank Shard Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* scrollbar customization and basic animations */
+        body { background-color: #0f172a; color: #e2e8f0; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+        
+        .node-item { transition: all 0.3s ease; }
+        .progress-bar-fill { transition: width 0.5s ease-out; }
+        
+        /* specific highlight for meta targets */
+        .meta-target { box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); border-color: #38bdf8 !important; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 font-sans antialiased">
+
+    <div class="max-w-4xl mx-auto bg-slate-800 rounded-xl shadow-2xl overflow-hidden border border-slate-700">
+        <!-- Header -->
+        <div class="bg-slate-900 p-6 border-b border-slate-700">
+            <h1 class="text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                <span class="text-cyan-400">❖</span> PGR S-Rank Shard Simulator
+            </h1>
+            <p class="text-slate-400 mt-2 text-sm md:text-base">Simulate your S-Rank Construct's evolution progress towards SSS+.</p>
+        </div>
+
+        <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- left column: input dan info -->
+            <div class="lg:col-span-1 space-y-6">
+                
+                <!-- input form -->
+                <div class="bg-slate-700/50 p-5 rounded-lg border border-slate-600">
+                    <h2 class="text-lg font-semibold text-white mb-4 border-b border-slate-500 pb-2">Shard Sources</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
+                                Phantom Pain Cage (PPC) 
+                                <span class="text-xs text-cyan-400 ml-1">(Max 30)</span>
+                            </label>
+                            <input type="number" id="inputPpc" min="0" max="30" value="0" 
+                                class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-cyan-400 transition-colors">
+                            <div class="text-xs text-slate-400 mt-1 flex justify-between">
+                                <span>Cost: <span id="costPpc" class="text-cyan-300 font-bold">0</span> Scars</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
+                                Voucher Shop (Shards)
+                            </label>
+                            <input type="number" id="inputVoucher" min="0" value="0" 
+                                class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-cyan-400 transition-colors">
+                            <div class="text-xs text-slate-400 mt-1 flex flex-col gap-1">
+                                <div class="flex justify-between">
+                                    <span>Cost: <span id="costVoucher" class="text-cyan-300 font-bold">0</span> Vouchers</span>
+                                    <span>(804/ea)</span>
+                                </div>
+                                <div id="timeVoucherContainer" class="hidden text-right text-purple-400 font-medium">
+                                    Est. time: <span id="monthsVoucher" class="font-bold">0</span> month(s)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-slate-300 mb-1">
+                                Gacha Duplicates 
+                                <span class="text-xs text-orange-400 ml-1">(1 Dupe = 30 Shards)</span>
+                            </label>
+                            <input type="number" id="inputGacha" min="0" value="0" 
+                                class="w-full bg-slate-900 border border-slate-600 rounded p-2 text-white focus:outline-none focus:border-orange-400 transition-colors">
+                            <div class="text-xs text-slate-400 mt-1 flex justify-between">
+                                <span>Cost: <span id="costGacha" class="text-orange-300 font-bold">0</span> Black Cards</span>
+                                <span>(60 Pity = 15,000 BC)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- info box -->
+                <div class="bg-blue-900/30 border border-blue-800/50 p-4 rounded-lg">
+                    <h3 class="text-sm font-bold text-blue-300 mb-2">💡 Additional Info</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Some S-Rank <i>Construct Shards</i> can sometimes be obtained through the <b>Event Shop/Service Shop</b> during specific <i>patches</i> using event currency. Don't forget to check the event shop when a new patch drops!
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- right column: results & progress -->
+            <div class="lg:col-span-2 space-y-6">
+                
+                <!-- current status -->
+                <div class="bg-slate-900 p-6 rounded-lg border border-slate-700 text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
+                    <p class="text-slate-400 text-sm uppercase tracking-wider mb-1">Current Status</p>
+                    <div class="flex items-end justify-center gap-4 mb-2">
+                        <h2 id="displayRank" class="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-white">
+                            S0
+                        </h2>
+                    </div>
+                    <p class="text-lg text-slate-300">
+                        Total Shards: <span id="displayTotal" class="font-bold text-white">0</span> / 300
+                    </p>
+                </div>
+
+                <!-- main progress bar -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-xs text-slate-400 font-bold px-1">
+                        <span>S</span>
+                        <span>SS (30)</span>
+                        <span>SSS (120)</span>
+                        <span>SSS+ (300)</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-4 border border-slate-700 relative overflow-hidden">
+                        <!-- bar background indicators -->
+                        <div class="absolute top-0 left-[10%] h-full w-px bg-slate-600 z-10"></div>
+                        <div class="absolute top-0 left-[40%] h-full w-px bg-slate-600 z-10"></div>
+                        
+                        <!-- The actual filling bar -->
+                        <div id="progressBar" class="progress-bar-fill bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 h-full rounded-full w-0 relative z-0"></div>
+                    </div>
+                </div>
+
+                <!-- nodes list -->
+                <div class="bg-slate-700/30 rounded-lg border border-slate-600 overflow-hidden flex flex-col h-[400px]">
+                    <div class="bg-slate-800 p-3 border-b border-slate-600 flex justify-between items-center">
+                        <h3 class="font-bold text-white text-sm">Node Progression Details</h3>
+                        <span class="text-xs bg-slate-700 px-2 py-1 rounded text-slate-300">Targets Highlighted</span>
+                    </div>
+                    
+                    <!-- nodes container -->
+                    <div id="nodesContainer" class="p-4 overflow-y-auto space-y-2 flex-grow">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // in-game node configuration
+        const TOTAL_MAX_SHARDS = 300;
+        const TARGET_NODES = ['S5', 'SS3', 'SSS3', 'SSS6'];
+
+        // structure data for each Rank phase
+        const rankPhases = [
+            { rank: 'S', baseShards: 0, shardsPerNode: 3, nextRankShards: 30 },
+            { rank: 'SS', baseShards: 30, shardsPerNode: 9, nextRankShards: 120 },
+            { rank: 'SSS', baseShards: 120, shardsPerNode: 18, nextRankShards: 300 }
+        ];
+
+        // DOM elemnts
+        const inputPpc = document.getElementById('inputPpc');
+        const inputVoucher = document.getElementById('inputVoucher');
+        const inputGacha = document.getElementById('inputGacha');
+        const costPpc = document.getElementById('costPpc');
+        const costVoucher = document.getElementById('costVoucher');
+        const timeVoucherContainer = document.getElementById('timeVoucherContainer');
+        const monthsVoucher = document.getElementById('monthsVoucher');
+        const costGacha = document.getElementById('costGacha');
+        const displayRank = document.getElementById('displayRank');
+        const displayTotal = document.getElementById('displayTotal');
+        const progressBar = document.getElementById('progressBar');
+        const nodesContainer = document.getElementById('nodesContainer');
+
+        function generateNodes() {
+            nodesContainer.innerHTML = '';
+            
+            // insert base S0
+            nodesContainer.appendChild(createNodeElement('S0', 0, 0, false, false));
+
+            // naming system
+            rankPhases.forEach(phase => {
+                for (let i = 1; i <= 10; i++) {
+                    let nodeName = `${phase.rank}${i}`;
+                    if (i === 10) {
+                        if (phase.rank === 'S') nodeName = 'SS0';
+                        else if (phase.rank === 'SS') nodeName = 'SSS0';
+                        else if (phase.rank === 'SSS') nodeName = 'SSS+';
+                    }
+
+                    let cumulativeShards = phase.baseShards + (i * phase.shardsPerNode);
+                    let isTarget = TARGET_NODES.includes(`${phase.rank}${i}`);
+                    
+                    let displayName = nodeName;
+                    if(displayName === 'SS0') displayName = 'SS (Rank Up)';
+                    if(displayName === 'SSS0') displayName = 'SSS (Rank Up)';
+
+                    nodesContainer.appendChild(
+                        createNodeElement(displayName, cumulativeShards, phase.shardsPerNode, isTarget, false)
+                    );
+                }
+            });
+        }
+
+        // helper to create visual element for each node
+        function createNodeElement(name, totalRequired, stepCost, isTarget, isReached) {
+            const div = document.createElement('div');
+            // base class
+            div.className = `node-item flex justify-between items-center p-3 rounded border ${isTarget ? 'meta-target bg-slate-800' : 'border-slate-700 bg-slate-800/50'}`;
+            // uniq id to update state later
+            div.id = `node-${totalRequired}`;
+            
+            div.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="status-icon w-6 h-6 rounded-full flex items-center justify-center text-xs border border-slate-500 bg-slate-700 text-transparent">
+                        ✓
+                    </div>
+                    <div>
+                        <span class="font-bold ${isTarget ? 'text-cyan-400' : 'text-slate-200'}">${name}</span>
+                        ${isTarget ? '<span class="ml-2 text-[10px] bg-cyan-900/50 text-cyan-300 px-1 rounded uppercase">Target</span>' : ''}
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-sm font-bold text-white">${totalRequired} <span class="text-xs text-slate-400 font-normal">Total Shards</span></div>
+                    ${stepCost > 0 ? `<div class="text-[10px] text-slate-500">+${stepCost} Shards to unlock</div>` : ''}
+                </div>
+            `;
+            return div;
+        }
+
+        // main calc function
+        function calculateProgress() {
+            // get and validate input
+            let ppc = parseInt(inputPpc.value) || 0;
+            if (ppc > 30) { ppc = 30; inputPpc.value = 30; }
+            
+            let voucher = parseInt(inputVoucher.value) || 0;
+            let gacha = parseInt(inputGacha.value) || 0;
+
+            // calculate currency ccosts
+            let ppcCostValue = 0;
+            if (ppc <= 10) {
+                ppcCostValue = ppc * 10;
+            } else {
+                ppcCostValue = (10 * 10) + ((ppc - 10) * 20);
+            }
+            costPpc.innerText = ppcCostValue.toLocaleString();
+
+            let voucherCostValue = voucher * 804;
+            costVoucher.innerText = voucherCostValue.toLocaleString();
+
+            // calculate estimated time for voucher hop (Max 20/mo)
+            if (voucher > 0) {
+                let months = Math.ceil(voucher / 20);
+                timeVoucherContainer.classList.remove('hidden');
+                monthsVoucher.innerText = months;
+            } else {
+                timeVoucherContainer.classList.add('hidden');
+            }
+
+            // asumsi 1 pity = 60 pulls, 1 pull = 250 BC -> 1 dupe = 15,000 BC
+            let gachaCostValue = gacha * 15000;
+            costGacha.innerText = gachaCostValue.toLocaleString();
+
+            // calculate total
+            let total = ppc + voucher + (gacha * 30);
+            
+            // limit visual max to 300
+            let visualTotal = total > TOTAL_MAX_SHARDS ? TOTAL_MAX_SHARDS : total;
+
+            // update total text
+            displayTotal.innerText = total;
+
+            // update progress bar
+            let percentage = (visualTotal / TOTAL_MAX_SHARDS) * 100;
+            progressBar.style.width = `${percentage}%`;
+
+            // Ddetermine current rank and node
+            let currentRankName = "S0";
+            
+            if (total >= 300) {
+                currentRankName = "SSS+";
+            } else if (total >= 120) {
+                let nodes = Math.floor((total - 120) / 18);
+                currentRankName = nodes === 0 ? "SSS" : `SSS${nodes}`;
+            } else if (total >= 30) {
+                let nodes = Math.floor((total - 30) / 9);
+                currentRankName = nodes === 0 ? "SS" : `SS${nodes}`;
+            } else {
+                let nodes = Math.floor(total / 3);
+                currentRankName = nodes === 0 ? "S0" : `S${nodes}`;
+            }
+
+            displayRank.innerText = currentRankName;
+
+            // update visual list node
+            updateNodeListState(total);
+        }
+
+        // update check/color status on node list
+        function updateNodeListState(currentTotal) {
+            const nodeElements = nodesContainer.querySelectorAll('.node-item');
+            
+            nodeElements.forEach(el => {
+                // eextract required shard from element id (e.g., 'node-30' -> 30)
+                const reqShards = parseInt(el.id.split('-')[1]);
+                const icon = el.querySelector('.status-icon');
+                const nameText = el.querySelector('.font-bold');
+                const isTarget = el.classList.contains('meta-target');
+
+                if (currentTotal >= reqShards) {
+                    // node reached
+                    el.classList.add('border-emerald-500/50', 'bg-emerald-900/20');
+                    el.classList.remove('border-slate-700', 'bg-slate-800/50');
+                    icon.classList.remove('border-slate-500', 'bg-slate-700', 'text-transparent');
+                    icon.classList.add('bg-emerald-500', 'border-emerald-400', 'text-white');
+                    
+                    if(!isTarget) nameText.classList.replace('text-slate-200', 'text-emerald-400');
+                } else {
+                    // node not reached
+                    el.classList.remove('border-emerald-500/50', 'bg-emerald-900/20');
+                    if(!isTarget) {
+                        el.classList.add('border-slate-700', 'bg-slate-800/50');
+                        nameText.classList.replace('text-emerald-400', 'text-slate-200');
+                    }
+                    icon.classList.add('border-slate-500', 'bg-slate-700', 'text-transparent');
+                    icon.classList.remove('bg-emerald-500', 'border-emerald-400', 'text-white');
+                }
+            });
+        }
+
+        // event listeners for inputs
+        inputPpc.addEventListener('input', calculateProgress);
+        inputVoucher.addEventListener('input', calculateProgress);
+        inputGacha.addEventListener('input', calculateProgress);
+
+        // init page load
+        window.onload = () => {
+            generateNodes();
+            calculateProgress();
+        };
+    </script>
+</body>
+</html>

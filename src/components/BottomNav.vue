@@ -11,7 +11,6 @@
             d="M12 2.1L2 12h3v8h6v-5h2v5h6v-8h3L12 2.1zm0 2.83L19 12h-1v7h-4v-5H10v5H6v-7H5L12 4.93z" />
         </svg>
       </div>
-      <span class="nav-label">Home</span>
     </router-link>
 
     <!-- PGR -->
@@ -19,7 +18,6 @@
       <div class="nav-indicator">
         <span class="logo-mask logo-mask--pgr nav-logo-icon" aria-hidden="true"></span>
       </div>
-      <span class="nav-label">PGR</span>
     </router-link>
 
     <!-- WuWa -->
@@ -27,7 +25,6 @@
       <div class="nav-indicator">
         <span class="logo-mask logo-mask--wuwa nav-logo-icon" aria-hidden="true"></span>
       </div>
-      <span class="nav-label">WuWa</span>
     </router-link>
 
   </nav>
@@ -124,10 +121,4 @@ const isActive = (path: string) => {
   mask-image: url('../assets/images/wuwa-logo.svg');
 }
 
-.nav-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
-}
 </style>
