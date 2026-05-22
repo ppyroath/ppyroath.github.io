@@ -274,26 +274,7 @@ const props = defineProps<{
   gameTimezone?: string;
 }>();
 
-// Derive human-readable label for the game's primary/base server timezone
-// POSIX inverted: Etc/GMT-8 = UTC+8, Etc/GMT+5 = UTC-5
-const baseServerLabel = computed(() => {
-  const tz = props.gameTimezone ?? 'Etc/UTC';
-  if (!tz || tz === 'Etc/UTC') return 'Server (UTC)';
-  const m = tz.match(/^Etc\/GMT([+-])(\d+)$/);
-  if (!m) return 'Server';
-  const sign = m[1] === '-' ? '+' : '-';
-  return `Server (UTC${sign}${m[2]})`;
-});
 
-// Derive a human-readable label for the selected game server timezone
-const serverTimezoneLabel = computed(() => {
-  const tz = props.timezone;
-  if (tz === 'Etc/UTC') return 'UTC';
-  const offset = tz.replace('Etc/GMT', '');
-  if (offset.startsWith('-')) return `UTC+${offset.substring(1)}`;
-  if (offset.startsWith('+')) return `UTC-${offset.substring(1)}`;
-  return 'UTC';
-});
 
 const DAY_CELL_WIDTH = 34; // Width of a single day cell in pixels
 const scrollContainer = ref<HTMLElement | null>(null);
