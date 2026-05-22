@@ -21,12 +21,11 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import duration from 'dayjs/plugin/duration';
 import advancedFormat from 'dayjs/plugin/advancedFormat';
+import { getTzOffsetMinutes } from '../utils/timezone';
 
 dayjs.extend(utc);
-dayjs.extend(timezone);
 dayjs.extend(duration);
 dayjs.extend(advancedFormat);
 
@@ -45,7 +44,8 @@ const timeUntilReset = ref('');
 let intervalId: number;
 
 const nextResetTime = computed(() => {
-  const nowInServerTz = dayjs().tz(props.config.timezone);
+  const offset = getTzOffsetMinutes(props.config.timezone);
+  const nowInServerTz = dayjs.utc().utcOffset(offset);
   const [resetHour, resetMinute] = props.config.dailyReset.split(':').map(Number);
   let nextReset = nowInServerTz
     .hour(resetHour)
@@ -65,7 +65,8 @@ const localResetTime = computed(() => {
 
 const updateTimes = () => {
   const now = dayjs();
-  const nowInServerTz = now.tz(props.config.timezone);
+  const offset = getTzOffsetMinutes(props.config.timezone);
+  const nowInServerTz = now.utc().utcOffset(offset);
   serverTime.value = nowInServerTz.format('HH:mm:ss');
 
   const diff = nextResetTime.value.diff(nowInServerTz);

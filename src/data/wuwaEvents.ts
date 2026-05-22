@@ -4,10 +4,10 @@ export const wuwaEvents: GameEvent[] = [
   {
     name: "Reverbs from the End of Galaxies",
     startTime: "2026-04-30T11:00:00Z",
-    endTime: "2026-06-10T03:59:59Z",
+    endTime: "2026-06-11T03:59:59Z",
     image: new URL('../assets/wuwa/images/wuwa33.webp', import.meta.url).href,
-    link: "https://wutheringwaves.kurogames.com/en/main/news/",
-    description: "STC, Version 3.3 update. Click for more details."
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4613",
+    description: "Version 3.3 update. Click for more details."
   },
   {
     name: "Resolution to Illuminate the Shadows",

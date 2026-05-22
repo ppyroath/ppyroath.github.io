@@ -25,11 +25,24 @@
       </div>
     </div>
 
+    <!-- Show My Local Time Toggle -->
+    <div class="browser-time-toggle">
+      <label class="toggle-label" :for="'browser-time-wuwa'">
+        <span class="toggle-label-text">Show My Local Time</span>
+        <div class="toggle-track" :class="{ active: showBrowserTime }" @click="showBrowserTime = !showBrowserTime">
+          <div class="toggle-thumb"></div>
+        </div>
+      </label>
+    </div>
+
     <!-- Event List -->
     <EventList
       :events="wuwaEvents"
+      :timelineData="wuwaTimelineData"
       :timezone="currentServerConfig.timezone"
       :serverTimezone="serverTimezoneLabel"
+      :showBrowserTime="showBrowserTime"
+      gameTimezone="Etc/GMT-8"
     />
   </div>
 </template>
@@ -39,6 +52,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import EventList from '../components/EventList.vue';
 import ServerTime from '../components/ServerTime.vue';
 import { wuwaEvents } from '../data/wuwaEvents';
+import { wuwaTimelineData } from '../data/wuwaTimeline';
 
 const wuwaServerConfigs = {
   America: { name: 'America', timezone: 'Etc/GMT+5', dailyReset: '04:00' },
@@ -48,6 +62,7 @@ const wuwaServerConfigs = {
 };
 
 const selectedServer = ref('SEA');
+const showBrowserTime = ref(false);
 
 const currentServerConfig = computed(() =>
   wuwaServerConfigs[selectedServer.value as keyof typeof wuwaServerConfigs]
@@ -67,10 +82,18 @@ onMounted(() => {
   if (savedServer && Object.keys(wuwaServerConfigs).includes(savedServer)) {
     selectedServer.value = savedServer;
   }
+  const savedBrowserTime = localStorage.getItem('wuwaShowBrowserTime');
+  if (savedBrowserTime !== null) {
+    showBrowserTime.value = savedBrowserTime === 'true';
+  }
 });
 
 watch(selectedServer, (newServer) => {
   localStorage.setItem('wuwaServer', newServer);
+});
+
+watch(showBrowserTime, (v) => {
+  localStorage.setItem('wuwaShowBrowserTime', String(v));
 });
 </script>
 
@@ -106,7 +129,7 @@ watch(selectedServer, (newServer) => {
 }
 
 .seg-btn-wrapper {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -158,6 +181,64 @@ watch(selectedServer, (newServer) => {
 
 .seg-btn:hover:not(.active) {
   background: var(--state-hover);
+  color: var(--md-on-surface);
+}
+
+/* ── Browser-time toggle ── */
+.browser-time-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-label-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--md-on-surface-variant);
+  transition: color 0.2s ease;
+}
+
+.toggle-track {
+  width: 38px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: var(--md-surface-container-high);
+  border: 1px solid var(--md-outline-variant);
+  position: relative;
+  transition: background 0.25s ease, border-color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.toggle-track.active {
+  background: var(--md-primary);
+  border-color: var(--md-primary);
+}
+
+.toggle-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--md-on-surface-variant);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.25s ease;
+}
+
+.toggle-track.active .toggle-thumb {
+  transform: translateX(16px);
+  background: var(--md-on-primary);
+}
+
+.toggle-label:hover .toggle-label-text {
   color: var(--md-on-surface);
 }
 </style>

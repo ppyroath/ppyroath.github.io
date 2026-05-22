@@ -17,8 +17,20 @@
         :now="currentTime"
         :timezone="props.timezone"
         :serverTimezone="props.serverTimezone"
+        :showBrowserTime="props.showBrowserTime"
+        :gameTimezone="props.gameTimezone"
       />
     </div>
+
+    <!-- Gantt Chart Timeline -->
+    <GanttChart
+      v-if="activePatchTimeline"
+      :patch="activePatchTimeline"
+      :timezone="props.timezone"
+      :now="currentTime"
+      :showBrowserTime="props.showBrowserTime"
+      :gameTimezone="props.gameTimezone"
+    />
 
     <!-- Upcoming -->
     <div class="event-category">
@@ -37,6 +49,8 @@
           :now="currentTime"
           :timezone="props.timezone"
           :serverTimezone="props.serverTimezone"
+          :showBrowserTime="props.showBrowserTime"
+          :gameTimezone="props.gameTimezone"
         />
       </div>
       <div v-else class="no-events-message">
@@ -65,6 +79,8 @@
             :now="currentTime"
             :timezone="props.timezone"
             :serverTimezone="props.serverTimezone"
+            :showBrowserTime="props.showBrowserTime"
+            :gameTimezone="props.gameTimezone"
           />
         </div>
       </div>
@@ -80,13 +96,27 @@ import {
 } from 'vue';
 import type { GameEvent } from '../data/pgrEvents';
 import EventItem from './EventItem.vue';
+import GanttChart from './GanttChart.vue';
+import type { PatchTimeline } from '../data/wuwaTimeline';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import { getTzTime as getTzTimeUtil } from '../utils/timezone';
+
+dayjs.extend(utc);
 
 const props = defineProps<{
   events: GameEvent[];
+  timelineData?: PatchTimeline[];
   timezone: string;
   serverTimezone: string;
+  showBrowserTime?: boolean;
+  gameTimezone?: string;
 }>();
+
+// Helper to convert database ISO strings timezone-adjusted based on selected server
+const getTzTime = (dateStr: string) => {
+  return getTzTimeUtil(dateStr, props.timezone, false);
+};
 
 // ── Timer ────────────────────────────────────────────────
 const showPastEvents = ref(false);
@@ -106,26 +136,36 @@ onUnmounted(() => {
 
 // ── Event buckets ────────────────────────────────────────
 const sortedEvents = computed(() =>
-  [...props.events].sort((a, b) => dayjs(a.startTime).diff(dayjs(b.startTime)))
+  [...props.events].sort((a, b) => getTzTime(a.startTime).diff(getTzTime(b.startTime)))
 );
 
 const ongoingEvents = computed(() =>
   sortedEvents.value.filter(e => {
-    const start = dayjs(e.startTime);
-    const end   = dayjs(e.endTime);
+    const start = getTzTime(e.startTime);
+    const end   = getTzTime(e.endTime);
     return currentTime.value.isAfter(start) && currentTime.value.isBefore(end);
   })
 );
 
 const upcomingEvents = computed(() =>
-  sortedEvents.value.filter(e => dayjs(e.startTime).isAfter(currentTime.value))
+  sortedEvents.value.filter(e => getTzTime(e.startTime).isAfter(currentTime.value))
 );
 
 const pastEvents = computed(() =>
   sortedEvents.value
-    .filter(e => dayjs(e.endTime).isBefore(currentTime.value))
-    .sort((a, b) => dayjs(b.endTime).diff(dayjs(a.endTime)))
+    .filter(e => getTzTime(e.endTime).isBefore(currentTime.value))
+    .sort((a, b) => getTzTime(b.endTime).diff(getTzTime(a.endTime)))
 );
+
+const activePatchTimeline = computed(() => {
+  if (!props.timelineData || props.timelineData.length === 0) return null;
+  return props.timelineData.find(patch => {
+    const start = getTzTime(patch.startTime);
+    const end = getTzTime(patch.endTime);
+    return currentTime.value.isAfter(start) && currentTime.value.isBefore(end);
+  }) || props.timelineData[0];
+});
+
 
 // ── Past grid proportional scaling ──────────────────────
 const PAST_GRID_REF_WIDTH = 700;

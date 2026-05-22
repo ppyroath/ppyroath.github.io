@@ -13,7 +13,7 @@ export const pgrEvents: GameEvent[] = [
     startTime: "2026-04-21T05:00:00Z",
     endTime: "2026-06-01T01:59:59Z",
     image: new URL('../assets/pgr/images/the-dying-sun.jpg', import.meta.url).href,
-    link: "https://pgr.kurogame.net/news/4398",
+    link: "https://pgr.kurogame.net/news/4527",
     description: "New story chapter, new frame: Aeternion. Click for more details."
   },
   {

@@ -33,12 +33,16 @@
 
         <div class="event-duration">
           <div class="time-row">
-            <span class="time-label">Server</span>
-            <span class="time-value">{{ formatServerTime(event.startTime) }} – {{ formatServerTime(event.endTime) }}</span>
+            <span class="time-label">MAIN</span>
+            <span class="time-value">{{ formatUtcTime(event.startTime) }} – {{ formatUtcTime(event.endTime) }}</span>
           </div>
           <div class="time-row">
-            <span class="time-label">Local</span>
-            <span class="time-value">{{ formatLocalTime(event.startTime) }} – {{ formatLocalTime(event.endTime) }}</span>
+            <span class="time-label">SERVER</span>
+            <span class="time-value">{{ formatServerTime(event.startTime) }} – {{ formatServerTime(event.endTime) }}</span>
+          </div>
+          <div v-if="showBrowserTime" class="time-row time-row--browser">
+            <span class="time-label">LOCAL</span>
+            <span class="time-value time-value--browser">{{ formatBrowserTime(event.startTime) }} – {{ formatBrowserTime(event.endTime) }}</span>
           </div>
         </div>
       </div>
@@ -54,23 +58,30 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
+import { getTzTime as getTzTimeUtil, getTzOffsetMinutes } from '../utils/timezone';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const props = defineProps<{
   event: GameEvent;
   now: dayjs.Dayjs;
   timezone: string;
   serverTimezone: string;
+  showBrowserTime?: boolean;
+  gameTimezone?: string;
 }>();
 
+
+// Helper to convert database ISO strings timezone-adjusted based on selected server
+const getTzTime = (dateStr: string) => {
+  return getTzTimeUtil(dateStr, props.timezone, false);
+};
+
 const status = computed(() => {
-  const start = dayjs(props.event.startTime);
-  const end = dayjs(props.event.endTime);
+  const start = getTzTime(props.event.startTime);
+  const end = getTzTime(props.event.endTime);
   if (props.now.isBefore(start)) return 'upcoming';
   if (props.now.isAfter(end)) return 'past';
   return 'ongoing';
@@ -99,9 +110,9 @@ const timerLabel = computed(() => {
 const formattedTimer = computed(() => {
   let targetDate;
   if (status.value === 'upcoming') {
-    targetDate = dayjs(props.event.startTime);
+    targetDate = getTzTime(props.event.startTime);
   } else if (status.value === 'ongoing') {
-    targetDate = dayjs(props.event.endTime);
+    targetDate = getTzTime(props.event.endTime);
   } else {
     return 'Already ended';
   }
@@ -126,27 +137,36 @@ const formattedTimer = computed(() => {
 
 const progress = computed(() => {
   if (status.value !== 'ongoing') return 0;
-  const start = dayjs(props.event.startTime);
-  const end = dayjs(props.event.endTime);
+  const start = getTzTime(props.event.startTime);
+  const end = getTzTime(props.event.endTime);
   const total = end.diff(start);
   const elapsed = props.now.diff(start);
   return Math.min((elapsed / total) * 100, 100);
 });
 
-const formatServerTime = (date: string) => {
-  if (props.timezone === 'Etc/UTC') {
-    return dayjs.utc(date).format('MM-DD HH:mm');
-  }
-  const wallTime = date.slice(0, -1);
-  return dayjs.tz(wallTime, props.timezone).format('MM-DD HH:mm');
+
+// MAIN: raw stored time — for wuwaEvents.ts this equals Asia/SEA server clock time
+const formatUtcTime = (date: string) => {
+  return dayjs.utc(date).format('MM-DD HH:mm');
 };
 
-const formatLocalTime = (date: string) => {
-  if (props.timezone === 'Etc/UTC') {
-    return dayjs.utc(date).local().format('MM-DD HH:mm');
-  }
-  const wallTime = date.slice(0, -1);
-  return dayjs.tz(wallTime, props.timezone).local().format('MM-DD HH:mm');
+// SERVER: convert from base server time to selected server time using offset diff
+// wuwaEvents.ts stores Asia server time as fake-UTC, so we shift by (selected - base)
+const formatServerTime = (date: string) => {
+  const baseOffset  = getTzOffsetMinutes(props.gameTimezone ?? 'Etc/UTC');
+  const selectedOffset = getTzOffsetMinutes(props.timezone);
+  const diffMinutes = selectedOffset - baseOffset;
+  return dayjs.utc(date).add(diffMinutes, 'minute').format('MM-DD HH:mm');
+};
+
+// LOCAL: convert from base server time to browser timezone
+// first derive the actual UTC moment, then reinterpret in browser locale
+const formatBrowserTime = (date: string) => {
+  const baseOffset = getTzOffsetMinutes(props.gameTimezone ?? 'Etc/UTC');
+  const actualUtcMs = dayjs.utc(date).valueOf() - baseOffset * 60 * 1000;
+  const browserTime = dayjs(actualUtcMs);
+  const offset = browserTime.format('Z');
+  return `${browserTime.format('MM-DD HH:mm')} (GMT${offset})`;
 };
 </script>
 
@@ -337,6 +357,16 @@ const formatLocalTime = (date: string) => {
   font-size: 11px;
   color: rgba(255,255,255,0.65);
   text-align: right;
+}
+
+.time-row--browser {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  margin-top: 2px;
+  padding-top: 2px;
+}
+
+.time-value--browser {
+  color: rgba(180, 220, 255, 0.75);
 }
 
 .status-past .event-name    { opacity: 0.75; }
