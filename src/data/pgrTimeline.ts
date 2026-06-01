@@ -2,143 +2,143 @@ import type { PatchTimeline } from './wuwaTimeline';
 
 export const pgrTimelineData: PatchTimeline[] = [
   {
-    patchName: "The Dying Sun",
+    patchName: "Homecoming Voyage",
     patchVersion: "Global",
-    startTime: "2026-04-21T05:00:00Z",
-    endTime: "2026-06-01T01:59:59Z",
+    startTime: "2026-06-02T11:00:00Z",
+    endTime: "2026-07-16T23:00:00Z",
     events: [
       {
-        name: "Kamui: Aeternion Rate Up",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "gacha",
-        description: "100% rate up in [Themed Event Construct] and [Fate Themed Construct] research."
+        name: "Phylotree Nexus: Lucia: Inverse Crown",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'gacha',
+        description: "New S-Rank Omniframe Research"
       },
       {
-        name: "Solar Flare Weapon Rate Up",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2099-12-31T23:59:59Z",
-        type: "gacha",
-        description: "80% rate up in [Target Weapon] research for Kamui: Aeternion's Exclusive 6★ Kinetic Greatsword."
+        name: "Phylotree Nexus Weapon Target: Lightless Dusk",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'gacha',
+        description: "New 6★ Weapon Research (Inverse Crown Exclusive)"
       },
       {
-        name: "Ignis CUB Rate Up",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "gacha",
-        description: "100% rate up in [CUB Target] research."
+        name: "Phylotree Nexus CUB: Allos",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'gacha',
+        description: "New S-Rank CUB Research"
       },
       {
-        name: "Stellar Memories Coating Research Rerun",
-        startTime: "2026-04-28T10:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "gacha",
-        description: "Coating research rerun event for Threads of Destiny, Love's Dawn, Tsubaki, or Solitary Longings."
+        name: "Phylotree Nexus Research Rerun",
+        startTime: "2026-06-05T10:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'gacha',
+        description: "Rerun Content: S-Rank Omniframe [Liv: Limpidity], 6★ Weapon [Ripples of the Aloft Sea], S-Rank CUB [Levvi]"
       },
       {
-        name: "Early Summer Special Target Research",
-        startTime: "2026-04-28T10:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "gacha",
-        description: "100% rate up for up to 28 S-Rank frames with price-off for researches."
+        name: "Fluttering Ballet Coating Research",
+        startTime: "2026-06-05T10:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'gacha',
+        description: "SFX Coating [Fluttering Ballet] for Liv: Limpidity"
       },
       {
-        name: "Wishing Target Research",
-        startTime: "2026-04-28T10:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "gacha",
-        description: "100% rate up for 9 of the latest S-Rank Constructs with a 50% price off for the first Research x10."
+        name: "Main Story - Homecoming Voyage",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "New Main Story Chapter"
       },
       {
-        name: "New Story - The Dying Sun",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2099-12-31T23:59:59Z",
-        type: "event",
-        description: "New permanent story chapter. Requirement: Clear Normal Story 1-12."
+        name: "Long Live the Crowned - Character Trial Stage",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Trial stage for Lucia: Inverse Crown"
       },
       {
-        name: "7-day Login Bonus Event",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T05:00:00Z",
-        type: "event",
-        description: "Log in for 7 days during the event period to obtain various rewards."
+        name: "7-Day Login Sign-in Rewards",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-16T05:00:00Z",
+        type: 'event',
+        description: "Sign in for 7 days to claim Coating Pick Supply Pack x1 and Basic Construct R&D Tickets"
       },
       {
-        name: "Sunstrider's Return",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "event",
-        description: "New trial event to familiarize yourself with the new frame Kamui: Aeternion."
+        name: "Mugwort's Blessing Sign-in Event",
+        startTime: "2026-06-19T10:00:00Z",
+        endTime: "2026-06-27T05:00:00Z",
+        type: 'event',
+        description: "Sign in for 3 days to claim Event Construct R&D Ticket x250 and Stamp"
       },
       {
-        name: "Simulation Shop",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "event",
-        description: "Use Simulation Score to redeem rewards including Feynman memory set, Portable Game Console, and Cosmos Campfire decor set."
+        name: "Tidal Twirl",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-16T05:00:00Z",
+        type: 'event',
+        description: "Spend Summer Radiance Vouchers to draw rewards including S-Rank Omniframe Choice Pack"
+      },
+      {
+        name: "Heavenly Tailwind Total Spending Event",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Bonus rewards for reaching total spending milestones with Rainbow Cards"
       },
       {
         name: "Journal of Promise",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2099-12-31T23:59:59Z",
-        type: "event",
-        description: "Permanent affection story for Kamui: Aeternion."
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Lucia: Inverse Crown's affection story"
       },
       {
-        name: "Butter Coffee Wonders",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-06-01T05:00:00Z",
-        type: "event",
-        description: "Top-down rogue-lite mode to protect the cafe from enemy assault."
+        name: "Nebulous Vigil - Boss Challenge",
+        startTime: "2026-06-03T10:00:00Z",
+        endTime: "2026-06-29T05:00:00Z",
+        type: 'event',
+        description: "High-difficulty boss challenge against Vanguard"
+      },
+      {
+        name: "Babylonia — F.O.S. Military Command College",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Explore the past and future of F.O.S. to earn exclusive Commandant costume [Raven Regalia]"
+      },
+      {
+        name: "Shrouded Requiem",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "New permanent game mode release consisting of Labyrinth Breakthrough and Nightshroud Tales"
       },
       {
         name: "Rapid Pursuit",
-        startTime: "2026-04-21T05:00:00Z",
-        endTime: "2026-05-19T05:00:00Z",
-        type: "event",
-        description: "Classic boss challenge event consisting of 4 stages."
+        startTime: "2026-06-16T10:00:00Z",
+        endTime: "2026-07-16T05:00:00Z",
+        type: 'event',
+        description: "Bounty Boss challenge event"
       },
       {
-        name: "The Absence Sings",
-        startTime: "2026-04-22T10:00:00Z",
-        endTime: "2026-05-19T05:00:00Z",
-        type: "event",
-        description: "Challenge mode featuring the latest Boss 'Ezette' with six stages of progressive difficulties."
+        name: "Retro Arcade",
+        startTime: "2026-06-23T10:00:00Z",
+        endTime: "2026-07-16T05:00:00Z",
+        type: 'event',
+        description: "Mini-games event including Fluffy Snooze, Wreck-It Shark-speare, and Cat Grab"
       },
       {
-        name: "The Godfall Revelation - Desperado Clash Season Rerun",
-        startTime: "2026-04-28T10:00:00Z",
-        endTime: "2026-06-01T05:00:00Z",
-        type: "event",
-        description: "Season rerun featuring faster global point gain and return of accessory/character leveling systems."
+        name: "Guild Expedition X",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Join the Command Bureau to clear stages and defeat the boss Melinoe"
       },
       {
-        name: "Sunlit Getaway Sign-in Event",
-        startTime: "2026-05-01T10:00:00Z",
-        endTime: "2026-05-09T05:00:00Z",
-        type: "event",
-        description: "Sign in for 3 days to obtain rewards including Event Construct R&D Ticket x200."
-      },
-      {
-        name: "Earthy Camping",
-        startTime: "2026-05-05T10:00:00Z",
-        endTime: "2026-06-01T05:00:00Z",
-        type: "event",
-        description: "Casual game mode escorting Strike Hawk members to their points of interest."
-      },
-      {
-        name: "May Special Comms Event",
-        startTime: "2026-05-20T10:00:00Z",
-        endTime: "2026-06-01T23:00:00Z",
-        type: "event",
-        description: "Gift Dawning Diary to Constructs to receive special comms and Lucent Covenant collectibles."
-      },
-      {
-        name: "Homeward-Bound Voyage Returning Invitation Event",
-        startTime: "2026-05-30T05:00:00Z",
-        endTime: "2026-07-15T05:00:00Z",
-        type: "event",
-        description: "Invite absent Commandants to return to the game using a unique invite code to earn rewards."
+        name: "Tactical Assessment Manual - Homecoming File",
+        startTime: "2026-06-02T11:00:00Z",
+        endTime: "2026-07-17T05:00:00Z",
+        type: 'event',
+        description: "Battle Pass featuring new Generic - Final Alternate Coating for Lucia: Inverse Crown"
       }
     ]
   }

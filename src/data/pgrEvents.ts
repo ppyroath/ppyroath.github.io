@@ -9,6 +9,14 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Homecoming Voyage",
+    startTime: "2026-06-02T11:00:00Z",
+    endTime: "2026-07-16T23:00:00Z",
+    image: new URL('../assets/pgr/images/homecoming-voyage.webp', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/4750",
+    description: "New story chapter, new frame: Inverse Crown. Click for more details."
+  },
+  {
     name: "The Dying Sun",
     startTime: "2026-04-21T05:00:00Z",
     endTime: "2026-06-01T01:59:59Z",
