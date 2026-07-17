@@ -2,9 +2,25 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "Blade Of Past Resounds, Lingering Dream Hymns",
+    startTime: "2026-07-10T03:00:00Z",
+    endTime: "2026-08-21T03:00:00Z",
+    image: new URL('../assets/wuwa/images/wuwa35.webp', import.meta.url).href,
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/5091",
+    description: "Version 3.5 update. Click for more details."
+  },
+  {
+    name: "The Dream Not Dreamed",
+    startTime: "2026-06-08T10:00:00Z",
+    endTime: "2026-07-10T03:00:00Z",
+    image: new URL('../assets/wuwa/images/wuwa34.webp', import.meta.url).href,
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4819",
+    description: "Version 3.4 update. Click for more details."
+  },
+  {
     name: "Reverbs from the End of Galaxies",
     startTime: "2026-04-30T11:00:00Z",
-    endTime: "2026-06-11T03:59:59Z",
+    endTime: "2026-06-08T10:00:00Z",
     image: new URL('../assets/wuwa/images/wuwa33.webp', import.meta.url).href,
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/4613",
     description: "Version 3.3 update. Click for more details."
