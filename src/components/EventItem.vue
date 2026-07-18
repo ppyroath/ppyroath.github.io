@@ -123,7 +123,7 @@ const formattedTimer = computed(() => {
 
   const diff = targetDate.diff(props.now);
   const d = dayjs.duration(diff);
-  const days = d.days();
+  const days = Math.floor(d.asDays());
   const hours = d.hours();
   const minutes = d.minutes();
   const seconds = d.seconds();
