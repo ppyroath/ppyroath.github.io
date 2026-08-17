@@ -9,9 +9,17 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Steering By Light",
+    startTime: "2026-08-17T18:00:00Z",
+    endTime: "2026-09-28T18:00:00Z",
+    image: "https://media-cdn-zspms.kurogame.net/pnswebsite/website2.0/images/1786896000000/5fklihtf87u46c6oe5-1786954252862.png",
+    link: "https://pgr.kurogame.net/news/5308",
+    description: "Steering By Light update. Click for more details."
+  },
+  {
     name: "Of Solitude And Stillness",
     startTime: "2026-07-15T18:00:00Z",
-    endTime: "2026-08-26T18:00:00Z",
+    endTime: "2026-08-17T18:00:00Z",
     image: new URL('../assets/pgr/images/of-solitude-and-stillness.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/5159",
     description: "Of Solitude And Stillness update. Click for more details."
