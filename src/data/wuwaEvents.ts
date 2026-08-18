@@ -2,9 +2,16 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "Lamplight in Mirage, Sword's Resolve in Heart",
+    startTime: "2026-08-20T03:00:00Z",
+    endTime: "2026-09-30T03:00:00Z",
+    image: new URL('../assets/wuwa/images/wuwa36.webp', import.meta.url).href,
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/5310",
+    description: "Version 3.6 update. Click for more details."
+  },  {
     name: "Blade Of Past Resounds, Lingering Dream Hymns",
     startTime: "2026-07-10T03:00:00Z",
-    endTime: "2026-08-21T03:00:00Z",
+    endTime: "2026-08-20T03:00:00Z",
     image: new URL('../assets/wuwa/images/wuwa35.webp', import.meta.url).href,
     link: "https://wutheringwaves.kurogames.com/en/main/news/detail/5091",
     description: "Version 3.5 update. Click for more details."

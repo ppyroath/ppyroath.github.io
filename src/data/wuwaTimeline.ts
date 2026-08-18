@@ -17,202 +17,231 @@ export interface PatchTimeline {
 
 export const wuwaTimelineData: PatchTimeline[] = [
   {
-  patchName: "Blade of Past Resounds, Lingering Dream Hymns",
+  patchName: "Lamplight in Mirage, Sword's Resolve in Heart",
   patchVersion: "Global",
-  startTime: "2026-07-10T03:00:00Z",
-  endTime: "2026-08-20T03:00:00Z", // corrected from calendar, see note above
+  startTime: "2026-08-20T03:00:00Z",
+  endTime: "2026-09-30T03:00:00Z", 
   events: [
-    // --- Featured Resonator Convene ---
-    {
-      name: "Voices on Azure Feathers",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Resonator Convene — Yangyang: Xuanling (5★ debut)"
-    },
-    {
-      name: "Blessings From Dewy Winds",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Resonator Convene — Suisui (5★ debut)"
-    },
-    {
-      name: "When Winter Thaws",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Resonator Convene rerun — Luuk Herssen"
-    },
-    {
-      name: "Take Flight in Spring",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Resonator Convene rerun — Aemeath"
-    },
-    {
-      name: "Undefined Spectrum",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Resonator Convene rerun — Lynae"
-    },
-    // --- Reverb Resonator Convene ---
-    {
-      name: "Starpath Reverbs",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Reverb Resonator Convene — rotating rerun pool of past limited resonators"
-    },
-    // --- Featured Weapon Convene ---
-    {
-      name: "Azure Oath",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Weapon Convene — signature weapon for Yangyang: Xuanling"
-    },
-    {
-      name: "Firstlight's Herald",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Weapon Convene — signature weapon for Suisui"
-    },
-    {
-      name: "Daybreaker's Spine",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Weapon Convene rerun — Luuk Herssen's signature weapon"
-    },
-    {
-      name: "Everbright Polestar",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Weapon Convene rerun — Aemeath's signature weapon"
-    },
-    {
-      name: "Spectrum Blaster",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'gacha',
-      description: "Featured Weapon Convene rerun — Lynae's signature weapon"
-    },
-    // --- Reverb Weapon Convene ---
-    {
-      name: "Tideforge Reverbs",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'gacha',
-      description: "Reverb Weapon Convene — rotating rerun pool of past signature weapons"
-    },
-    // --- Main Quest ---
-    {
-      name: "Chapter IV Act I, Act II, Segue",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-08-20T03:00:00Z",
-      type: 'event',
-      description: "Main story quest continuation in the new Mengzhou region, Land of Xuanfang"
-    },
-    // --- Special Event ---
-    {
-      name: "Lament Recon: Tacet Crisis",
-      startTime: "2026-07-11T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'event',
-      description: "Combat event — reposition and dodge while fighting waves of enemies, buy weapons/items mid-run. Rewards Astrite, exclusive sigil, avatar and title"
-    },
-    {
-      name: "A Glimpse of Xuanfang / Shape of Yesterday",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-08-20T03:00:00Z",
-      type: 'event',
-      description: "Exploration events introducing the new Land of Xuanfang region"
-    },
-    {
-      name: "Recaptured: Action Highlights",
-      startTime: "2026-07-16T03:00:00Z",
-      endTime: "2026-08-06T03:00:00Z",
-      type: 'event',
-      description: "Combat photography event — perform specific actions with a designated character and capture them on camera"
-    },
-    {
-      name: "Lollo Campaign: New Journey",
-      startTime: "2026-08-06T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'event',
-      description: "Login-based event, rewards Tides and consumables"
-    },
-    {
-      name: "Virtual Crisis: Quadrant Trials",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'event',
-      description: "Combat event — defeat strong enemies across stages with selectable modifiers. Rewards Astrite, tuner, potion and exclusive title"
-    },
-    {
-      name: "Gifts of Aftertune",
-      startTime: "2026-07-10T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'event',
-      description: "Login-based event, rewards Tides and consumables"
-    },
-    {
-      name: "In Search of Lost Jade",
-      startTime: "2026-07-30T03:00:00Z",
-      endTime: "2026-08-13T03:00:00Z",
-      type: 'event',
-      description: "Limited-time exploration/collection event"
-    },
-    {
-      name: "Bountiful Crescendo",
-      startTime: "2026-07-23T03:00:00Z",
-      endTime: "2026-07-30T03:00:00Z",
-      type: 'double-drop',
-      description: "Limited-time material double-drop event"
-    },
-    {
-      name: "Chord Cleansing",
-      startTime: "2026-08-12T03:00:00Z",
-      endTime: "2026-08-19T03:00:00Z",
-      type: 'double-drop',
-      description: "Limited-time Echo double-drop event"
-    },
+  {
+    name: 'Wind of Transcendence (Qingxiao)',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-10T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 1 Featured Resonator Convene'
+  },
+  {
+    name: 'False Promise for Tomorrow (Denia)',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-10T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 1 Featured Resonator Convene'
+  },
+  {
+    name: 'Glint of Clouds',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-10T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 1 Featured Weapon Convene'
+  },
+  {
+    name: 'Forged Dwarf Star',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-10T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 1 Featured Weapon Convene'
+  },
+  {
+    name: 'Where Santu Beckons (Jingran)',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Resonator Convene'
+  },
+  {
+    name: 'Thousand Futures Mirrored in Snow (Hiyuki)',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Resonator Convene'
+  },
+  {
+    name: 'Distant May the Starlights Be (Mornye)',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Resonator Convene'
+  },
+  {
+    name: 'Thousandfold Deliverance',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Weapon Convene'
+  },
+  {
+    name: 'Frostburn',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Weapon Convene'
+  },
+  {
+    name: 'Starfield Calibrator',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'gacha',
+    description: 'Phase 2 Featured Weapon Convene'
+  },
+  {
+    name: 'Chapter IV Act III & Chapter IV Segue',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Main Quest Update'
+  },
+  {
+    name: 'Gifts of Drifting Mist',
+    startTime: '2026-08-20T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event / Login Event'
+  },
+  {
+    name: 'Resonance Sim Realm',
+    startTime: '2026-08-22T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event'
+  },
+  {
+    name: 'Second Coming of Solaris: Coded Deception',
+    startTime: '2026-08-27T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event'
+  },
+  {
+    name: 'The Strings Remember',
+    startTime: '2026-09-02T02:00:00Z',
+    endTime: '2026-09-21T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event'
+  },
+  {
+    name: 'If Dreams Still Reverberate',
+    startTime: '2026-09-10T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event'
+  },
+  {
+    name: 'Wuthering Exploration',
+    startTime: '2026-09-17T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'event',
+    description: 'Featured Event'
+  },
+  {
+    name: 'Bountiful Crescendo',
+    startTime: '2026-09-03T02:00:00Z',
+    endTime: '2026-09-10T01:59:59Z',
+    type: 'double-drop',
+    description: 'Tacet Field Double Drop Event'
+  },
+  {
+    name: 'Chord Cleansing',
+    startTime: '2026-09-22T02:00:00Z',
+    endTime: '2026-09-29T01:59:59Z',
+    type: 'double-drop',
+    description: 'Simulation Challenge Double Drop Event'
+  },
     // --- Recurring Challenge ---
     // These run on their own rotation and don't align 1:1 with the version
     // window — ranges kept as shown on the calendar rather than clipped.
     {
-      name: "Tower of Adversity",
-      startTime: "2026-06-22T03:00:00Z",
-      endTime: "2026-09-14T03:00:00Z",
-      type: 'event',
-      description: "Recurring floor-climbing combat challenge, rotates roughly every 4 weeks (phases: 6-22→7-20, 7-20→8-17, 8-17→9-14)"
-    },
-    {
-      name: "Whimpering Wastes",
-      startTime: "2026-07-06T03:00:00Z",
-      endTime: "2026-08-31T03:00:00Z",
-      type: 'event',
-      description: "Recurring rogue-lite dungeon challenge mode"
-    },
-    {
-      name: "Weekly Activity",
-      startTime: "2026-07-06T03:00:00Z",
-      endTime: "2026-08-24T03:00:00Z",
-      type: 'event',
-      description: "Standard weekly login/combat activity reset"
-    },
-    {
-      name: "Endstate Matrix: Adversity",
-      startTime: "2026-07-17T03:00:00Z",
-      endTime: "2026-08-20T03:00:00Z",
-      type: 'event',
-      description: "High-difficulty recurring combat trial"
-    },
+    name: 'Tower of Adversity Phase 1',
+    startTime: '2026-08-16T20:00:00Z',
+    endTime: '2026-09-13T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
+  {
+    name: 'Tower of Adversity Phase 2',
+    startTime: '2026-09-13T20:00:00Z',
+    endTime: '2026-10-11T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
+  {
+    name: 'Whimpering Wastes Phase 1',
+    startTime: '2026-08-02T20:00:00Z',
+    endTime: '2026-08-30T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
+  {
+    name: 'Whimpering Wastes Phase 2',
+    startTime: '2026-08-30T20:00:00Z',
+    endTime: '2026-09-27T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
+  {
+    name: 'Whimpering Wastes Phase 3',
+    startTime: '2026-09-27T20:00:00Z',
+    endTime: '2026-10-25T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
+  {
+    name: 'Weekly Activity (08-17 - 08-24)',
+    startTime: '2026-08-16T20:00:00Z',
+    endTime: '2026-08-23T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Weekly Activity (08-24 - 08-31)',
+    startTime: '2026-08-23T20:00:00Z',
+    endTime: '2026-08-30T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Weekly Activity (08-31 - 09-07)',
+    startTime: '2026-08-30T20:00:00Z',
+    endTime: '2026-09-06T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Weekly Activity (09-07 - 09-21)',
+    startTime: '2026-09-06T20:00:00Z',
+    endTime: '2026-09-20T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Weekly Activity (09-21 - 09-28)',
+    startTime: '2026-09-20T20:00:00Z',
+    endTime: '2026-09-27T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Weekly Activity (09-28 - 10-05)',
+    startTime: '2026-09-27T20:00:00Z',
+    endTime: '2026-10-04T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge (Weekly Reset)'
+  },
+  {
+    name: 'Endstate Matrix: Adversity',
+    startTime: '2026-08-16T20:00:00Z',
+    endTime: '2026-09-29T19:59:59Z',
+    type: 'event',
+    description: 'Recurring Challenge'
+  },
   ]
 },
 ];

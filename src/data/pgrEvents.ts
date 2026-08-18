@@ -9,9 +9,17 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "Steering by Light",
+    startTime: "2026-08-19T05:00:00Z",
+    endTime: "2026-09-23T01:59:59Z",
+    image: new URL('../assets/pgr/images/steering-by-light.webp', import.meta.url).href,
+    link: "https://pgr.kurogame.net/news/5308",
+    description: "New story chapter, new frame: Effulgence. Click for more details."
+  },
+  {
     name: "Of Solitude And Stillness",
-    startTime: "2026-07-15T18:00:00Z",
-    endTime: "2026-08-26T18:00:00Z",
+    startTime: "2026-07-17T05:00:00Z",
+    endTime: "2026-08-18T01:59:59Z",
     image: new URL('../assets/pgr/images/of-solitude-and-stillness.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/5159",
     description: "Of Solitude And Stillness update. Click for more details."
@@ -19,7 +27,7 @@ export const pgrEvents: GameEvent[] = [
   {
     name: "Homecoming Voyage",
     startTime: "2026-06-02T11:00:00Z",
-    endTime: "2026-07-15T18:00:00Z",
+    endTime: "2026-07-16T18:00:00Z",
     image: new URL('../assets/pgr/images/homecoming-voyage.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/4750",
     description: "New story chapter, new frame: Inverse Crown. Click for more details."
