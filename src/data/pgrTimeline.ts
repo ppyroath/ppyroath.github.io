@@ -2,101 +2,143 @@ import type { PatchTimeline } from './wuwaTimeline';
 
 export const pgrTimelineData: PatchTimeline[] = [
   {
-  patchName: "Steering by Light",
+  patchName: "Anchored in Faith",
   patchVersion: "Global",
-  startTime: "2026-08-19T05:00:00Z",
-  endTime: "2026-09-23T01:59:59Z", // ESTIMATED — see note above
+  startTime: "2026-09-24T05:00:00Z",
+  endTime: "2026-11-04T23:00:00Z",
   events: [
   {
-    name: 'Karenina: Effulgence S-Rank Omniframe',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Adelyde: Anabasis S-Rank Omniframe',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
     type: 'gacha',
-    description: '100% chance to get Karenina: Effulgence upon getting an S-Rank Construct in Themed Construct and Fate Themed Construct Research Pools.'
+    description: '100% chance to get Adelyde: Anabasis upon getting an S-Rank Construct in the Crucible Event Construct and Fate Crucible Event Construct Research Pools.'
   },
   {
-    name: 'Star of Niflheim 6★ Weapon',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Unforsaken Beacon 6★ Weapon',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
     type: 'gacha',
-    description: 'Effulgence Exclusive 6★ Weapon available through the Target Weapon Research Pool.'
+    description: 'Anabasis Exclusive 6★ Weapon available through the Target Weapon Research Pool.'
   },
   {
-    name: 'Patrick S-Rank CUB',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Kelpie S-Rank CUB',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
     type: 'gacha',
-    description: '100% chance to get Patrick upon getting an S-Rank CUB in the CUB Target Research Pool.'
+    description: '100% chance to get Kelpie upon getting an S-Rank CUB in the CUB Target Research Pool.'
   },
   {
-    name: 'Fleeting Memories Coating Research',
-    startTime: '2026-08-26T10:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Kurumi Tokisaki Otherworld Character',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
     type: 'gacha',
-    description: 'Coating research rerun event featuring Tainted Moonrise, Grandiose Glamor, Neon Dynamite ☆, and Nightfall Finale.'
+    description: 'Date A Live collab. 100% chance to get Kurumi Tokisaki upon getting an S-Rank Character in the Kurumi Tokisaki Target and Fate Kurumi Tokisaki Target Research Pools.'
   },
   {
-    name: 'Tactical Assessment Manual: Hadal Depths File',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Hour & Minute 6★ Collab Weapon',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
+    type: 'gacha',
+    description: 'Kurumi Tokisaki Exclusive 6★ Weapon available through the Collab Weapon Target Research Pool.'
+  },
+  {
+    name: 'Zafkiel Otherworld Armament',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
+    type: 'gacha',
+    description: '100% chance to get Zafkiel upon getting an S-Rank Otherworld Armament in the Otherworld Armament Target Research Pool.'
+  },
+  {
+    name: 'Stellar Memories Coating Research',
+    startTime: '2026-09-26T10:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
+    type: 'gacha',
+    description: 'Coating research event featuring Night Sonata, Threads of Destiny, Love\'s Dawn, and Tsubaki.'
+  },
+  {
+    name: 'Main Story: Anchored in Faith',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
+    type: 'event',
+    description: 'New Main Story chapter. Requires clearing Main Story 1-12.'
+  },
+  {
+    name: 'Tactical Assessment Manual: Farwatch File',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
     type: 'event',
     description: 'Complete rating missions to grant Intel Value and unlock rewards, including Encrypted and Top-Secret Intel tiers.'
   },
   {
-    name: 'Breakers Resurfaced: Character Trial Stage',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'A Kindler\'s Watch: Character Trial Stage',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T23:00:00Z',
     type: 'event',
-    description: 'Trial Stage for Karenina: Effulgence to learn basic controls and earn collectibles.'
+    description: 'Trial Stage for Adelyde: Anabasis. Clear Journal of Promise: A Kindler\'s Watch to claim Adelyde: Anabasis x1 for free.'
+  },
+  {
+    name: 'Dream of Stagnant Cycle: Collab Story',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
+    type: 'event',
+    description: 'Date A Live collab story stage. Requires clearing Main Story 1-12.'
+  },
+  {
+    name: 'Against the Flow of Time: Character Trial Stage',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
+    type: 'event',
+    description: 'Trial Stage for Kurumi Tokisaki to learn basic controls and earn collectibles.'
+  },
+  {
+    name: 'Visitor From Afar Sign-In',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-03T23:59:00Z',
+    type: 'event',
+    description: 'Claim rewards including Otherworld Character Target R&D Attempt x24, Collab Weapon Target R&D Attempt x14, and Event Construct R&D Ticket x1,000.'
   },
   {
     name: '7-Day Sign-in Rewards',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T05:00:00Z',
     type: 'event',
     description: 'Sign in for 7 days total during the event to claim all rewards including Basic Construct R&D Tickets.'
   },
   {
-    name: 'Waves in Wrath: Boss Challenge',
-    startTime: '2026-08-20T10:00:00Z',
-    endTime: '2026-09-14T05:00:00Z',
+    name: 'Moonlit Osmanthus Sign-In',
+    startTime: '2026-09-25T10:00:00Z',
+    endTime: '2026-10-04T05:00:00Z',
     type: 'event',
-    description: 'High-difficulty challenge consisting of 5 distinct difficulty tiers against the Boss Mannan M-1A.'
+    description: 'Sign in for 3 days total to claim Event Construct R&D Ticket x250, Serum Bundle β (M) x2, and Stamp - Moongazing.'
   },
   {
-    name: 'Tidal Wishes Event Update',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T23:00:00Z',
+    name: 'Wrathful Monsoon: Boss Challenge',
+    startTime: '2026-09-25T10:00:00Z',
+    endTime: '2026-10-19T05:00:00Z',
     type: 'event',
-    description: 'Complete the prerequisite chapters to unlock the summer stories for Bianca and Teddy.'
+    description: 'High-difficulty challenge consisting of 5 distinct difficulty tiers against the Boss Rusalka: Cruising Vanguard.'
   },
   {
-    name: 'Strings Workshop Event',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-03T05:00:00Z',
+    name: 'Circuit Calculus',
+    startTime: '2026-09-24T05:00:00Z',
+    endTime: '2026-11-04T05:00:00Z',
     type: 'event',
-    description: 'Customize a signature instrument for each band member in the Babylonia Custom Instrument Studio.'
+    description: 'Auto battle event with 9 stages. Clear stages 1-8 to challenge the endless stage.'
   },
   {
-    name: 'Blazing Rhapsody',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T05:00:00Z',
+    name: 'Overclock Simulation',
+    startTime: '2026-09-29T10:00:00Z',
+    endTime: '2026-11-04T05:00:00Z',
     type: 'event',
-    description: 'Protect the street concert by clearing out disruptors in 8 stages, with hard mode unlocking the Endless Challenge.'
+    description: 'Event with 4 chapters and Peak Calculation, compete across all servers for a limited-time animated chat frame.'
   },
   {
-    name: 'Rapid Pursuit',
-    startTime: '2026-09-03T10:00:00Z',
-    endTime: '2026-09-23T05:00:00Z',
+    name: 'Wreck-It Huhu',
+    startTime: '2026-10-08T10:00:00Z',
+    endTime: '2026-11-04T05:00:00Z',
     type: 'event',
-    description: 'Bounty hunting event featuring 4 stages, each with 3 difficulty tiers to challenge.'
-  },
-  {
-    name: 'Love\'s Leisure Hour',
-    startTime: '2026-08-19T05:00:00Z',
-    endTime: '2026-09-23T05:00:00Z',
-    type: 'event',
-    description: 'Piece together clues from 40 invitations to figure out who sent them and unlock exclusive background stories.'
+    description: 'Cube puzzle event with 3 chapters of 4 stages each and a new enhancement system.'
   }
 ]
 },

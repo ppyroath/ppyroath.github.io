@@ -9,17 +9,17 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
-    name: "Anchored In Faith",
-    startTime: "2026-09-22T18:00:00Z",
-    endTime: "2026-11-03T18:00:00Z",
-    image: "https://media-cdn-zspms.kurogame.net/pnswebsite/website2.0/images/1790006400000/qhw4fnl21qqxoj82ip-1790068425066.png",
+    name: "Anchored in Faith",
+    startTime: "2026-09-24T05:00:00Z",
+    endTime: "2026-11-04T23:00:00Z",
+    image: new URL('../assets/pgr/images/anchored-in-faith.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/5466",
-    description: "Anchored In Faith update. Click for more details."
+    description: "New story chapter, new frame: Anabasis, Date A Live collab with Kurumi Tokisaki. Click for more details."
   },
   {
     name: "Steering by Light",
     startTime: "2026-08-19T05:00:00Z",
-    endTime: "2026-09-22T18:00:00Z",
+    endTime: "2026-09-23T23:00:00Z",
     image: new URL('../assets/pgr/images/steering-by-light.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/5308",
     description: "New story chapter, new frame: Effulgence. Click for more details."
