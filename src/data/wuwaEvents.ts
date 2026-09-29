@@ -2,6 +2,14 @@ import type { GameEvent } from './pgrEvents';
 
 export const wuwaEvents: GameEvent[] = [
   {
+    name: "Prism's Illusion, Heart's Illumination",
+    startTime: "2026-09-30T03:00:00Z",
+    endTime: "2026-11-12T03:00:00Z",
+    image: new URL('../assets/wuwa/images/wuwa37.webp', import.meta.url).href,
+    link: "https://wutheringwaves.kurogames.com/en/main/news/detail/5529",
+    description: "Version 3.7 update. Click for more details."
+  },
+  {
     name: "Lamplight in Mirage, Sword's Resolve in Heart",
     startTime: "2026-08-20T03:00:00Z",
     endTime: "2026-09-30T03:00:00Z",
