@@ -1,8 +1,5 @@
 <template>
-  <a
-    :href="event.link"
-    target="_blank"
-    rel="noopener noreferrer"
+  <article
     class="event-card"
     :class="[statusClass, { 'event-card--compact': compact }]"
   >
@@ -19,7 +16,10 @@
         </span>
       </div>
 
-      <h3 class="event-name">{{ event.name }}</h3>
+      <h3 class="event-name">
+        <!-- Stretched link: its ::after covers the whole card -->
+        <a :href="event.link" target="_blank" rel="noopener noreferrer" class="event-link">{{ event.name }}</a>
+      </h3>
       <p v-if="!compact" class="event-description">{{ event.description }}</p>
 
       <div
@@ -48,8 +48,15 @@
           <dd>{{ formatBrowserTime(event.startTime) }} to {{ formatBrowserTime(event.endTime) }}</dd>
         </div>
       </dl>
+
+      <div v-if="status !== 'past' && !compact" class="event-actions">
+        <Button variant="outline" size="sm" class="event-calendar" @click="addToCalendar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18M12 14v4M10 16h4" /></svg>
+          Add to calendar
+        </Button>
+      </div>
     </div>
-  </a>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +64,8 @@ import { computed } from 'vue';
 import type { GameEvent } from '../data/pgrEvents';
 import dayjs from 'dayjs';
 import Badge from './ui/Badge.vue';
+import Button from './ui/Button.vue';
+import { downloadIcs } from '../utils/calendar';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import utc from 'dayjs/plugin/utc';
@@ -166,6 +175,22 @@ const formatServerTime = (date: string) => {
   return dayjs.utc(date).add(diffMinutes, 'minute').format('MM-DD HH:mm');
 };
 
+// Real instant of a stored time: stored values are in the game's base timezone
+const toInstant = (date: string) => {
+  const baseOffset = getTzOffsetMinutes(props.gameTimezone ?? 'Etc/UTC');
+  return dayjs.utc(date).valueOf() - baseOffset * 60 * 1000;
+};
+
+const addToCalendar = () => {
+  downloadIcs({
+    title: props.event.name,
+    start: toInstant(props.event.startTime),
+    end: toInstant(props.event.endTime),
+    description: props.event.description,
+    url: props.event.link,
+  });
+};
+
 // LOCAL: convert from base server time to browser timezone
 // first derive the actual UTC moment, then reinterpret in browser locale
 const formatBrowserTime = (date: string) => {
@@ -179,6 +204,7 @@ const formatBrowserTime = (date: string) => {
 
 <style scoped>
 .event-card {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: var(--card);
@@ -241,6 +267,33 @@ const formatBrowserTime = (date: string) => {
 .event-timer__value {
   font-weight: 700;
   color: var(--fg);
+}
+
+.event-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+}
+
+.event-link:focus-visible {
+  outline: none;
+}
+
+.event-link:focus-visible::after {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+.event-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Sits above the stretched link so it stays clickable */
+.event-calendar {
+  position: relative;
+  z-index: 1;
 }
 
 .event-name {

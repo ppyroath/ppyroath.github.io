@@ -57,13 +57,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
+import { usePersisted } from '../composables/usePersisted';
 import { calculateUnionLeveling } from '../utils/ul_calculator';
 import type { CalculatorState, CalculationResult } from '../utils/ul_calculator';
 import WuwaAscensionCalc from './WuwaAscensionCalc.vue';
 import Card from './ui/Card.vue';
 
-const state = reactive<CalculatorState>({
+const state = usePersisted<CalculatorState>('wuwaUnionLevelCalc', {
   currentLevel: 10,
   currentExp: 0,
   targetLevel: 20,

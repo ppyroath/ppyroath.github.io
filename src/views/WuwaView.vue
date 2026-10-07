@@ -49,6 +49,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import ServerTime from '../components/ServerTime.vue';
 import WuwaTools from '../components/WuwaTools.vue';
@@ -67,7 +68,13 @@ const wuwaServerConfigs = {
 
 const selectedServer = ref('SEA');
 const showBrowserTime = ref(false);
-const currentTab = ref('events');
+// The active tab lives in the URL (#/wuwa/tools) so Back works and links can be shared
+const route = useRoute();
+const router = useRouter();
+const currentTab = computed({
+  get: () => (route.params.tab === 'tools' ? 'tools' : 'events'),
+  set: (tab: string) => router.push(tab === 'tools' ? '/wuwa/tools' : '/wuwa'),
+});
 const tabs = [
   { value: 'events', label: 'Events' },
   { value: 'tools',  label: 'Tools' },

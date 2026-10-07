@@ -13,7 +13,9 @@
           </span>
           <span class="game-row__body">
             <span class="game-row__name">{{ game.name }}</span>
-            <span v-if="game.patch" class="game-row__patch">{{ game.patch }}</span>
+            <span v-if="game.patch" class="game-row__patch">
+              {{ game.patch.running ? game.patch.name : `Last patch: ${game.patch.name}` }}
+            </span>
           </span>
           <span class="game-row__meta tabular">
             {{ game.running === 0 ? 'Nothing running' : `${game.running} running` }}
@@ -55,8 +57,11 @@ const isRunning = (start: string, end: string) =>
 const countRunning = (events: GameEvent[]) =>
   events.filter(e => isRunning(e.startTime, e.endTime)).length;
 
-const currentPatch = (timeline: PatchTimeline[]) =>
-  (timeline.find(p => isRunning(p.startTime, p.endTime)) ?? timeline[0])?.patchName;
+const currentPatch = (timeline: PatchTimeline[]) => {
+  const running = timeline.find(p => isRunning(p.startTime, p.endTime));
+  const patch = running ?? timeline[0];
+  return patch ? { name: patch.patchName, running: Boolean(running) } : null;
+};
 
 const games = computed(() => [
   {

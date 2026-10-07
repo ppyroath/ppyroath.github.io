@@ -65,9 +65,24 @@
         </Button>
       </div>
 
-      <div v-if="showPastEvents" id="past-events" class="past-grid">
+      <div v-if="showPastEvents" id="past-events">
+        <div class="past-search">
+          <label :for="searchId" class="sr-only">Search past events</label>
+          <input
+            :id="searchId"
+            v-model="pastQuery"
+            type="search"
+            class="input"
+            placeholder="Search past events"
+            autocomplete="off"
+          />
+        </div>
+        <p v-if="filteredPastEvents.length === 0" class="empty-state">
+          No past events match "{{ pastQuery }}".
+        </p>
+        <div v-else class="past-grid">
         <EventItem
-          v-for="event in pastEvents"
+          v-for="event in filteredPastEvents"
           :key="event.name"
           :event="event"
           :now="currentTime"
@@ -77,6 +92,7 @@
           :gameTimezone="props.gameTimezone"
           compact
         />
+        </div>
       </div>
     </section>
 
@@ -148,6 +164,16 @@ const pastEvents = computed(() =>
     .sort((a, b) => getTzTime(b.endTime).diff(getTzTime(a.endTime)))
 );
 
+const pastQuery = ref('');
+const searchId = `past-search-${Math.random().toString(36).slice(2, 8)}`;
+const filteredPastEvents = computed(() => {
+  const q = pastQuery.value.trim().toLowerCase();
+  if (!q) return pastEvents.value;
+  return pastEvents.value.filter(e =>
+    e.name.toLowerCase().includes(q) || e.description.toLowerCase().includes(q)
+  );
+});
+
 const activePatchTimeline = computed(() => {
   if (!props.timelineData || props.timelineData.length === 0) return null;
   return props.timelineData.find(patch => {
@@ -208,6 +234,10 @@ const activePatchTimeline = computed(() => {
   color: var(--muted-fg);
   font-size: 14px;
   text-align: center;
+}
+
+.past-search {
+  margin-bottom: 12px;
 }
 
 .past-grid {

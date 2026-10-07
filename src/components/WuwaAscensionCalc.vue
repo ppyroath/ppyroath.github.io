@@ -112,7 +112,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
+import { computed } from 'vue';
+import { usePersisted } from '../composables/usePersisted';
 import { 
   WUWA_LEVEL_OPTIONS, 
   WUWA_FORTE_OPTIONS, 
@@ -132,7 +133,7 @@ const forteDefs = {
   introSkill: { label: 'Intro Skill' }
 } as const;
 
-const state = reactive<AscensionCalcState>({
+const state = usePersisted<AscensionCalcState>('wuwaAscensionCalc', {
   currentLevel: 1,
   targetLevel: 90,
   basicAttack: { current: 1, target: 10 },

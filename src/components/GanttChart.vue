@@ -35,7 +35,7 @@
               class="month-header-cell"
               :style="{ left: group.left + '%', width: group.width + '%' }"
             >
-              {{ group.month }}
+              <span class="month-label">{{ group.month }}</span>
             </div>
           </div>
           
@@ -107,6 +107,8 @@
                     @mouseenter="handleMouseEnter(event, $event)"
                     @mousemove="handleMouseMove"
                     @mouseleave="handleMouseLeave"
+                    @focus="handleFocus(event, $event)"
+                    @blur="handleMouseLeave"
                     @click="handleEventClick(event, $event)"
                   >
                     <span class="bar-title">{{ event.name }}</span>
@@ -146,6 +148,8 @@
                     @mouseenter="handleMouseEnter(event, $event)"
                     @mousemove="handleMouseMove"
                     @mouseleave="handleMouseLeave"
+                    @focus="handleFocus(event, $event)"
+                    @blur="handleMouseLeave"
                     @click="handleEventClick(event, $event)"
                   >
                     <span class="bar-title">{{ event.name }}</span>
@@ -208,6 +212,7 @@
     <!-- Custom Modal/Dialog for Clicked Event Details -->
     <div v-if="clickedEvent" class="gantt-modal-backdrop" @click="clickedEvent = null">
       <div
+        ref="modalContent"
         class="gantt-modal-content"
         role="dialog"
         aria-modal="true"
@@ -253,8 +258,17 @@
           <h4 class="modal-desc-title">Description</h4>
           <p class="modal-desc-text">{{ clickedEvent.description }}</p>
         </div>
-        <div v-if="clickedEvent.link" class="modal-link-box">
-          <a 
+        <div class="modal-link-box">
+          <button
+            v-if="!isPast(clickedEvent)"
+            type="button"
+            class="modal-secondary-button"
+            @click="addToCalendar(clickedEvent)"
+          >
+            Add to calendar
+          </button>
+          <a
+            v-if="clickedEvent.link"
             :href="clickedEvent.link" 
             target="_blank" 
             rel="noopener noreferrer" 
@@ -277,6 +291,7 @@ import type { TimelineEvent, PatchTimeline } from '../data/wuwaTimeline';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { getTzTime as getTzTimeUtil, getTzOffsetMinutes } from '../utils/timezone';
+import { downloadIcs } from '../utils/calendar';
 
 dayjs.extend(utc);
 
@@ -314,8 +329,39 @@ watch(clickedEvent, async (event, previous) => {
   }
 });
 
+const modalContent = ref<HTMLElement | null>(null);
+
 const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape' && clickedEvent.value) clickedEvent.value = null;
+  if (!clickedEvent.value) return;
+  if (e.key === 'Escape') {
+    clickedEvent.value = null;
+    return;
+  }
+  // Keep Tab inside the open dialog
+  if (e.key === 'Tab' && modalContent.value) {
+    const focusables = modalContent.value.querySelectorAll<HTMLElement>('button, a[href]');
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+};
+
+const addToCalendar = (event: TimelineEvent) => {
+  const isLocal = isLocalEvent(event);
+  downloadIcs({
+    title: event.name,
+    start: getTzTime(event.startTime, isLocal).valueOf(),
+    end: getTzTime(event.endTime, isLocal).valueOf(),
+    description: event.description,
+    url: event.link,
+  });
 };
 
 // Overflow track for marquee text
@@ -412,6 +458,10 @@ const cellWidthPercent = computed(() => {
   return totalDays.value > 0 ? (1 / totalDays.value) * 100 : 0;
 });
 
+// Months with only one or two days on the board get the short name so it fits
+const monthLabel = (group: { month: string; startDayIdx: number; endDayIdx: number }) =>
+  group.endDayIdx - group.startDayIdx + 1 < 3 ? group.month.slice(0, 3) : group.month;
+
 // Group days by month name
 const monthGroups = computed(() => {
   if (!patchStart.value || totalDays.value <= 0) return [];
@@ -430,7 +480,7 @@ const monthGroups = computed(() => {
         const left = (currentGroup.startDayIdx / totalDays.value) * 100;
         const width = ((currentGroup.endDayIdx - currentGroup.startDayIdx + 1) / totalDays.value) * 100;
         groups.push({
-          month: currentGroup.month,
+          month: monthLabel(currentGroup),
           left,
           width
         });
@@ -450,7 +500,7 @@ const monthGroups = computed(() => {
     const left = (currentGroup.startDayIdx / totalDays.value) * 100;
     const width = ((currentGroup.endDayIdx - currentGroup.startDayIdx + 1) / totalDays.value) * 100;
     groups.push({
-      month: currentGroup.month,
+      month: monthLabel(currentGroup),
       left,
       width
     });
@@ -581,6 +631,17 @@ const handleMouseMove = (e: MouseEvent) => {
 
 const handleMouseLeave = () => {
   hoveredEvent.value = null;
+};
+
+// Keyboard users get the same details popup, placed under the focused bar
+const handleFocus = (event: TimelineEvent, e: FocusEvent) => {
+  if (clickedEvent.value) return;
+  const rect = (e.target as HTMLElement).getBoundingClientRect();
+  hoveredEvent.value = event;
+  const tooltipWidth = 280;
+  const x = Math.min(Math.max(8, rect.left), window.innerWidth - tooltipWidth - 8);
+  const y = rect.bottom + 8 + 180 > window.innerHeight ? rect.top - 188 : rect.bottom + 8;
+  tooltipPosition.value = { x, y };
 };
 
 const handleEventClick = (event: TimelineEvent, e: MouseEvent) => {
@@ -827,15 +888,20 @@ onUnmounted(() => {
   bottom: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 12px;
   font-weight: 600;
   color: var(--muted-fg);
   border-right: 1px solid var(--border);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* clip, not hidden, so the label below can stay pinned while scrolling */
+  overflow: clip;
   white-space: nowrap;
-  padding: 0 4px;
+}
+
+.month-label {
+  position: sticky;
+  left: 0;
+  padding: 0 12px;
 }
 
 .gantt-day-row {
@@ -1308,6 +1374,26 @@ onUnmounted(() => {
 .modal-link-box {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.modal-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 14px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.modal-secondary-button:hover {
+  background: var(--muted);
 }
 
 .modal-link-button {
@@ -1336,5 +1422,6 @@ onUnmounted(() => {
 /* Touch screens get 44px tap targets */
 @media (pointer: coarse) {
   .gantt-modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
+  .modal-secondary-button, .modal-link-button { height: 44px; }
 }
 </style>

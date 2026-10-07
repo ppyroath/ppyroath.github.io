@@ -95,15 +95,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { computed, watch, toRefs } from 'vue';
+import { usePersisted } from '../composables/usePersisted';
 import Card from './ui/Card.vue';
 import Button from './ui/Button.vue';
 import Badge from './ui/Badge.vue';
 
 // State
-const ppc = ref(0);
-const voucher = ref(0);
-const gacha = ref(0);
+const shardInputs = usePersisted('pgrShardSimulator', { ppc: 0, voucher: 0, gacha: 0 });
+const { ppc, voucher, gacha } = toRefs(shardInputs);
 
 // Watchers for bounds
 watch(ppc, (val) => {

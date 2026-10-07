@@ -8,12 +8,12 @@ const routes = [
     component: HomeView,
   },
   {
-    path: '/pgr',
+    path: '/pgr/:tab(events|tools)?',
     name: 'PGR',
     component: () => import('../views/PgrView.vue'),
   },
   {
-    path: '/wuwa',
+    path: '/wuwa/:tab(events|tools)?',
     name: 'WuWa',
     component: () => import('../views/WuwaView.vue'),
   },

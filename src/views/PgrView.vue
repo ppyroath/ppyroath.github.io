@@ -42,7 +42,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import EventList from '../components/EventList.vue';
 import ServerTime from '../components/ServerTime.vue';
 import PgrTools from '../components/PgrTools.vue';
@@ -58,7 +59,13 @@ const pgrServerConfig = {
 };
 
 const showBrowserTime = ref(false);
-const currentTab = ref('events');
+// The active tab lives in the URL (#/pgr/tools) so Back works and links can be shared
+const route = useRoute();
+const router = useRouter();
+const currentTab = computed({
+  get: () => (route.params.tab === 'tools' ? 'tools' : 'events'),
+  set: (tab: string) => router.push(tab === 'tools' ? '/pgr/tools' : '/pgr'),
+});
 const tabs = [
   { value: 'events', label: 'Events' },
   { value: 'tools',  label: 'Tools' },

@@ -12,7 +12,8 @@
           :key="game.path"
           :to="game.path"
           class="header-nav__link"
-          active-class="is-active"
+          :class="{ 'is-active': route.path.startsWith(game.path) }"
+          :aria-current="route.path.startsWith(game.path) ? 'page' : undefined"
         >
           {{ game.label }}
         </router-link>
@@ -25,7 +26,10 @@
 
 <script setup lang="ts">
 import pyroathIcon from '../assets/images/pyroath.png';
+import { useRoute } from 'vue-router';
 import ThemeToggle from './ThemeToggle.vue';
+
+const route = useRoute();
 
 const games = [
   { key: 'wuwa', path: '/wuwa', label: 'Wuthering Waves' },

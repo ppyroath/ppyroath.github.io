@@ -1,14 +1,21 @@
 # Pyroath
 
-A simple and clean web application to track in-game events for Punishing: Gray Raven and Wuthering Waves.<br>
+An event tracker for Punishing: Gray Raven and Wuthering Waves.<br>
 Preceded by [PGRNow](https://pgrnow.github.io)
 
 ## Features
 
--   Displays current and upcoming game events.
--   Shows server time for different game servers.
--   Clean and responsive user interface.
-
+-   **Event timers**: ongoing and upcoming events with live countdowns and progress, plus a searchable archive of past events.
+-   **Patch timeline**: a scrollable calendar of the current patch's banners, events and double drops, with a marker for today.
+-   **Server time**: current server time, your local reset time and a countdown to the next daily reset. Wuthering Waves supports the America, Asia, Europe and SEA servers.
+-   **Local time**: optionally show every event time in your own timezone.
+-   **Add to calendar**: download any ongoing or upcoming event as an `.ics` file for Google Calendar, Apple Calendar or Outlook.
+-   **Tools**:
+    -   Wuthering Waves: Union Level calculator, and a Resonator ascension and Forte material calculator.
+    -   Punishing: Gray Raven: S-Rank shard simulator and a link to PGR TL;DR Indonesia.
+    -   Calculator inputs are remembered between visits.
+-   **Light and dark themes**: follows your system setting, or pick one from the header.
+-   Works on phones and desktops, and every control can be used with a keyboard.
 
 ## Getting Started
 
@@ -36,4 +43,16 @@ Preceded by [PGRNow](https://pgrnow.github.io)
     npm run dev
     ```
 
+### Building
 
+```sh
+npm run build
+```
+
+The production build is written to `dist/`. Preview it locally with `npm run preview`.
+
+## Built With
+
+-   [Vue 3](https://vuejs.org/) and [Vue Router](https://router.vuejs.org/)
+-   [Vite](https://vite.dev/)
+-   [Day.js](https://day.js.org/) for time and timezone handling
