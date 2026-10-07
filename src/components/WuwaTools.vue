@@ -1,67 +1,57 @@
 <template>
-  <div class="wuwa-tools">
-    <div class="tool-card">
-      <h2 class="tool-title">Union Level Calculator</h2>
-      <p class="tool-desc">Calculate how many days it takes to reach your target Union Level.</p>
-
-      <!-- Info Box -->
-      <div class="info-box">
-        <h3 class="info-title">💡 Additional Info</h3>
-        <p class="info-text">
-          - <b>1 Asterite Refill</b> = 60 Waveplates = 600 Union EXP.<br>
-          - <b>1 Crystal Solvent</b> = 60 Waveplates = 600 Union EXP.<br>
-          - Daily Quests yield a fixed 2000 EXP.
-        </p>
+  <div class="tools">
+    <Card class="tool">
+      <div class="tool__header">
+        <h2 class="tool__title">Union Level calculator</h2>
+        <p class="tool__desc">How many days until you reach a target Union Level.</p>
       </div>
 
-      <div class="form-grid">
-        <div class="input-group">
-          <label>Current Level</label>
-          <input type="number" v-model.number="state.currentLevel" min="1" max="79" />
+      <div class="tool__body tool__split">
+        <div class="tool__inputs">
+          <div class="form-grid">
+            <div class="field">
+              <label for="ul-current-level">Current level</label>
+              <input id="ul-current-level" class="input tabular" type="number" v-model.number="state.currentLevel" min="1" max="79" />
+            </div>
+            <div class="field">
+              <label for="ul-current-exp">Current EXP</label>
+              <input id="ul-current-exp" class="input tabular" type="number" v-model.number="state.currentExp" min="0" />
+            </div>
+            <div class="field">
+              <label for="ul-target-level">Target level</label>
+              <input id="ul-target-level" class="input tabular" type="number" v-model.number="state.targetLevel" :min="state.currentLevel + 1" max="80" />
+            </div>
+            <div class="field">
+              <label for="ul-refills">Daily Asterite refills</label>
+              <input id="ul-refills" class="input tabular" type="number" v-model.number="state.dailyRefills" min="0" max="6" />
+            </div>
+            <div class="field">
+              <label for="ul-solvents">Crystal Solvents</label>
+              <input id="ul-solvents" class="input tabular" type="number" v-model.number="state.crystalSolvents" min="0" />
+            </div>
+          </div>
+
+          <ul class="note">
+            <li>1 Asterite refill = 60 Waveplates = 600 Union EXP</li>
+            <li>1 Crystal Solvent = 60 Waveplates = 600 Union EXP</li>
+            <li>Daily quests give a fixed 2,000 EXP</li>
+          </ul>
         </div>
-        <div class="input-group">
-          <label>Current EXP</label>
-          <input type="number" v-model.number="state.currentExp" min="0" />
-        </div>
-        <div class="input-group">
-          <label>Target Level</label>
-          <input type="number" v-model.number="state.targetLevel" :min="state.currentLevel + 1" max="80" />
-        </div>
-        <div class="input-group">
-          <label>Daily Refills (Asterite)</label>
-          <input type="number" v-model.number="state.dailyRefills" min="0" max="6" />
-        </div>
-        <div class="input-group">
-          <label>Crystal Solvents</label>
-          <input type="number" v-model.number="state.crystalSolvents" min="0" />
+
+        <div v-if="result" class="result" aria-live="polite">
+          <p class="result__label">Days required</p>
+          <p class="result__value tabular">{{ result.daysRequired }}</p>
+          <p class="result__sub">Around {{ result.estimatedDate.toLocaleDateString() }}</p>
+
+          <dl class="result__list tabular">
+            <div><dt>Total EXP needed</dt><dd>{{ result.totalExpNeeded.toLocaleString() }}</dd></div>
+            <div><dt>From Crystal Solvents</dt><dd>{{ result.expFromSolvents.toLocaleString() }}</dd></div>
+            <div><dt>Left to farm</dt><dd>{{ result.remainingExpToFarm.toLocaleString() }}</dd></div>
+          </dl>
         </div>
       </div>
+    </Card>
 
-      <div v-if="result" class="result-box">
-        <div class="result-item">
-          <span class="result-label">Total EXP Needed:</span>
-          <span class="result-value">{{ result.totalExpNeeded.toLocaleString() }}</span>
-        </div>
-        <div class="result-item">
-          <span class="result-label">EXP from Solvents:</span>
-          <span class="result-value">{{ result.expFromSolvents.toLocaleString() }}</span>
-        </div>
-        <div class="result-item">
-          <span class="result-label">Remaining EXP to Farm:</span>
-          <span class="result-value">{{ result.remainingExpToFarm.toLocaleString() }}</span>
-        </div>
-        <div class="result-item highlight">
-          <span class="result-label">Days Required:</span>
-          <span class="result-value">{{ result.daysRequired }} Days</span>
-        </div>
-        <div class="result-item">
-          <span class="result-label">Estimated Date:</span>
-          <span class="result-value">{{ result.estimatedDate.toLocaleDateString() }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Ascension Calculator -->
     <WuwaAscensionCalc />
   </div>
 </template>
@@ -71,6 +61,7 @@ import { ref, reactive, watch, onMounted } from 'vue';
 import { calculateUnionLeveling } from '../utils/ul_calculator';
 import type { CalculatorState, CalculationResult } from '../utils/ul_calculator';
 import WuwaAscensionCalc from './WuwaAscensionCalc.vue';
+import Card from './ui/Card.vue';
 
 const state = reactive<CalculatorState>({
   currentLevel: 10,
@@ -101,131 +92,4 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.wuwa-tools {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-bottom: 24px;
-}
-
-.tool-card {
-  background: var(--md-surface-container);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-}
-
-.tool-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--md-on-surface);
-  margin-bottom: 4px;
-}
-
-.tool-desc {
-  font-size: 0.85rem;
-  color: var(--md-on-surface-variant);
-  margin-bottom: 16px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.input-group label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--md-on-surface-variant);
-}
-
-.input-group input {
-  background: var(--md-surface-container-high);
-  border: 1px solid var(--md-outline);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  color: var(--md-on-surface);
-  font-size: 0.9rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.input-group input:focus {
-  border-color: var(--wuwa-primary);
-}
-
-.info-box {
-  background: rgba(234, 179, 8, 0.1);
-  border: 1px solid rgba(234, 179, 8, 0.3);
-  padding: 12px;
-  border-radius: var(--radius-md);
-  margin-bottom: 16px;
-}
-
-.info-title {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #fbbf24;
-  margin-bottom: 4px;
-}
-
-.info-text {
-  font-size: 0.75rem;
-  color: var(--md-on-surface-variant);
-  line-height: 1.5;
-}
-
-.info-text b {
-  color: var(--md-on-surface);
-}
-
-.result-box {
-  margin-top: 20px;
-  padding: 16px;
-  background: var(--md-surface-container-high);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--md-outline-variant);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.result-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  color: var(--md-on-surface-variant);
-}
-
-.result-item .result-value {
-  font-weight: 600;
-  color: var(--md-on-surface);
-}
-
-.result-item.highlight {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--md-outline-variant);
-}
-
-.result-item.highlight .result-label {
-  font-weight: 700;
-  color: var(--md-on-surface);
-}
-
-.result-item.highlight .result-value {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--wuwa-primary);
-}
-</style>
+<style scoped src="./tools.css"></style>

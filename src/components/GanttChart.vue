@@ -5,7 +5,7 @@
         <h3 class="gantt-card-title">Version {{ patch.patchVersion }} Timeline</h3>
         <span class="gantt-card-subtitle">{{ patch.patchName }}</span>
       </div>
-      <div class="gantt-legend">
+      <div class="gantt-legend" aria-label="Legend">
         <span class="legend-item"><span class="legend-dot legend-dot--gacha"></span>Gacha</span>
         <span class="legend-item"><span class="legend-dot legend-dot--event"></span>Event</span>
         <span class="legend-item"><span class="legend-dot legend-dot--drop"></span>Double Drop</span>
@@ -84,13 +84,16 @@
           <div v-if="gachaEvents.length > 0" class="gantt-section">
             <div class="section-label">Gacha & Banners</div>
             <div class="gantt-rows">
-              <div 
-                v-for="event in gachaEvents" 
-                :key="event.name" 
+              <div
+                v-for="(lane, laneIdx) in gachaLanes"
+                :key="laneIdx"
                 class="gantt-row"
               >
                 <div class="gantt-bar-container">
-                  <div 
+                  <button
+                    v-for="event in lane"
+                    :key="getEventKey(event)"
+                    type="button"
                     class="gantt-bar gantt-bar--gacha"
                     :class="{ 
                       'gantt-bar--past': isPast(event),
@@ -107,7 +110,7 @@
                     @click="handleEventClick(event, $event)"
                   >
                     <span class="bar-title">{{ event.name }}</span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -117,13 +120,16 @@
           <div v-if="otherEvents.length > 0" class="gantt-section">
             <div class="section-label">Events & Activities</div>
             <div class="gantt-rows">
-              <div 
-                v-for="event in otherEvents" 
-                :key="event.name" 
+              <div
+                v-for="(lane, laneIdx) in otherLanes"
+                :key="laneIdx"
                 class="gantt-row"
               >
                 <div class="gantt-bar-container">
-                  <div 
+                  <button
+                    v-for="event in lane"
+                    :key="getEventKey(event)"
+                    type="button"
                     class="gantt-bar"
                     :class="[
                       'gantt-bar--' + event.type,
@@ -143,7 +149,7 @@
                     @click="handleEventClick(event, $event)"
                   >
                     <span class="bar-title">{{ event.name }}</span>
-                  </div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -155,10 +161,10 @@
     </div>
     
     <div class="gantt-mobile-hint">
-      <svg class="swipe-icon" viewBox="0 0 24 24" fill="currentColor">
+      <svg class="swipe-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/>
       </svg>
-      Swipe horizontally to view full calendar
+      Swipe sideways to see the whole patch
     </div>
 
     <!-- Custom Floating Tooltip (Desktop Hover) -->
@@ -184,16 +190,16 @@
       <h4 class="tooltip-title">{{ hoveredEvent.name }}</h4>
       <div class="tooltip-time">
         <div class="tooltip-time-section">
-          <span class="tooltip-time-heading">MAIN</span>
-          <span class="tooltip-time-value">{{ formatBaseServerTime(hoveredEvent.startTime) }} – {{ formatBaseServerTime(hoveredEvent.endTime) }}</span>
+          <span class="tooltip-time-heading">Main</span>
+          <span class="tooltip-time-value">{{ formatBaseServerTime(hoveredEvent.startTime) }} to {{ formatBaseServerTime(hoveredEvent.endTime) }}</span>
         </div>
         <div class="tooltip-time-section">
-          <span class="tooltip-time-heading">SERVER</span>
-          <span class="tooltip-time-value">{{ formatServerTime(hoveredEvent.startTime, hoveredEvent) }} – {{ formatServerTime(hoveredEvent.endTime, hoveredEvent) }}</span>
+          <span class="tooltip-time-heading">Server</span>
+          <span class="tooltip-time-value">{{ formatServerTime(hoveredEvent.startTime, hoveredEvent) }} to {{ formatServerTime(hoveredEvent.endTime, hoveredEvent) }}</span>
         </div>
         <div v-if="showBrowserTime" class="tooltip-time-section tooltip-time-section--browser">
-          <span class="tooltip-time-heading">LOCAL</span>
-          <span class="tooltip-time-value tooltip-time-value--browser">{{ formatBrowserTime(hoveredEvent.startTime, hoveredEvent) }} – {{ formatBrowserTime(hoveredEvent.endTime, hoveredEvent) }}</span>
+          <span class="tooltip-time-heading">Local</span>
+          <span class="tooltip-time-value tooltip-time-value--browser">{{ formatBrowserTime(hoveredEvent.startTime, hoveredEvent) }} to {{ formatBrowserTime(hoveredEvent.endTime, hoveredEvent) }}</span>
         </div>
       </div>
       <p v-if="hoveredEvent.description" class="tooltip-desc">{{ hoveredEvent.description }}</p>
@@ -201,8 +207,16 @@
 
     <!-- Custom Modal/Dialog for Clicked Event Details -->
     <div v-if="clickedEvent" class="gantt-modal-backdrop" @click="clickedEvent = null">
-      <div class="gantt-modal-content" :style="{ borderColor: 'var(--md-primary)' }" @click.stop>
-        <button class="gantt-modal-close" @click="clickedEvent = null">&times;</button>
+      <div
+        class="gantt-modal-content"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="gantt-modal-title"
+        @click.stop
+      >
+        <button ref="modalClose" type="button" class="gantt-modal-close" aria-label="Close" @click="clickedEvent = null">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
+        </button>
         <div class="modal-badge-row">
           <span class="tooltip-badge" :class="'tooltip-badge--' + clickedEvent.type">
             {{ clickedEvent.type }}
@@ -217,22 +231,22 @@
             Upcoming
           </span>
         </div>
-        <h3 class="modal-title">{{ clickedEvent.name }}</h3>
+        <h3 id="gantt-modal-title" class="modal-title">{{ clickedEvent.name }}</h3>
         <div class="modal-time-box">
           <div class="modal-time-section">
-            <span class="modal-time-heading">MAIN:</span>
+            <span class="modal-time-heading">Main</span>
             <div class="modal-time-detail">Start: {{ formatBaseServerTime(clickedEvent.startTime) }}</div>
-            <div class="modal-time-detail">End: &nbsp;{{ formatBaseServerTime(clickedEvent.endTime) }}</div>
+            <div class="modal-time-detail">End: {{ formatBaseServerTime(clickedEvent.endTime) }}</div>
           </div>
           <div class="modal-time-section">
-            <span class="modal-time-heading">SERVER:</span>
+            <span class="modal-time-heading">Server</span>
             <div class="modal-time-detail">Start: {{ formatServerTime(clickedEvent.startTime, clickedEvent) }}</div>
-            <div class="modal-time-detail">End: &nbsp;{{ formatServerTime(clickedEvent.endTime, clickedEvent) }}</div>
+            <div class="modal-time-detail">End: {{ formatServerTime(clickedEvent.endTime, clickedEvent) }}</div>
           </div>
           <div v-if="showBrowserTime" class="modal-time-section modal-time-section--browser">
-            <span class="modal-time-heading">LOCAL:</span>
+            <span class="modal-time-heading">Local</span>
             <div class="modal-time-detail">Start: {{ formatBrowserTime(clickedEvent.startTime, clickedEvent) }}</div>
-            <div class="modal-time-detail">End: &nbsp;{{ formatBrowserTime(clickedEvent.endTime, clickedEvent) }}</div>
+            <div class="modal-time-detail">End: {{ formatBrowserTime(clickedEvent.endTime, clickedEvent) }}</div>
           </div>
         </div>
         <div v-if="clickedEvent.description" class="modal-desc-box">
@@ -246,8 +260,8 @@
             rel="noopener noreferrer" 
             class="modal-link-button"
           >
-            <span>Visit Event Page</span>
-            <svg class="external-link-icon" viewBox="0 0 24 24" fill="currentColor">
+            <span>Open official news post</span>
+            <svg class="external-link-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
             </svg>
           </a>
@@ -285,6 +299,24 @@ const tooltipPosition = ref({ x: 0, y: 0 });
 
 // Clicked Details Modal State
 const clickedEvent = ref<TimelineEvent | null>(null);
+const modalClose = ref<HTMLButtonElement | null>(null);
+let focusBeforeModal: HTMLElement | null = null;
+
+// Move focus into the dialog on open and give it back to the bar on close
+watch(clickedEvent, async (event, previous) => {
+  if (event && !previous) {
+    focusBeforeModal = document.activeElement as HTMLElement | null;
+    await nextTick();
+    modalClose.value?.focus();
+  } else if (!event && previous) {
+    focusBeforeModal?.focus();
+    focusBeforeModal = null;
+  }
+});
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Escape' && clickedEvent.value) clickedEvent.value = null;
+};
 
 // Overflow track for marquee text
 const overflowingEvents = ref<Record<string, number>>({});
@@ -335,6 +367,34 @@ const otherEvents = computed(() => {
   if (!props.patch) return [];
   return props.patch.events.filter(e => e.type !== 'gacha');
 });
+
+// Pack events into as few rows as possible: an event goes into the first row
+// whose last event has already ended, so back-to-back events share a row.
+const packLanes = (events: TimelineEvent[]) => {
+  const sorted = events
+    .map((event, idx) => ({
+      event,
+      idx,
+      start: getTzTime(event.startTime, isLocalEvent(event)).valueOf(),
+      end: getTzTime(event.endTime, isLocalEvent(event)).valueOf(),
+    }))
+    .sort((a, b) => a.start - b.start || a.idx - b.idx);
+
+  const lanes: { end: number; events: TimelineEvent[] }[] = [];
+  for (const item of sorted) {
+    const lane = lanes.find(l => l.end <= item.start);
+    if (lane) {
+      lane.events.push(item.event);
+      lane.end = item.end;
+    } else {
+      lanes.push({ end: item.end, events: [item.event] });
+    }
+  }
+  return lanes.map(l => l.events);
+};
+
+const gachaLanes = computed(() => packLanes(gachaEvents.value));
+const otherLanes = computed(() => packLanes(otherEvents.value));
 
 // Total days in the patch (inclusive)
 const totalDays = computed(() => {
@@ -461,9 +521,10 @@ const getBarStyles = (event: TimelineEvent) => {
   const left = (leftSeconds / patchDuration.value) * 100;
   const width = (barSeconds / patchDuration.value) * 100;
   
+  // 3px shorter so back-to-back bars in a shared row stay visibly separate
   return {
     left: Math.max(0, left) + '%',
-    width: Math.min(100 - left, Math.max(0.5, width)) + '%'
+    width: `calc(${Math.min(100 - left, Math.max(0.5, width))}% - 3px)`
   };
 };
 
@@ -618,6 +679,7 @@ onMounted(() => {
   
   checkOverflows();
   window.addEventListener('resize', checkOverflows);
+  window.addEventListener('keydown', handleKeydown);
   
   // Recalculate overflows once fonts are loaded
   if (document.fonts) {
@@ -652,6 +714,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', checkOverflows);
+  window.removeEventListener('keydown', handleKeydown);
   if (boardResizeObserver) {
     boardResizeObserver.disconnect();
   }
@@ -661,13 +724,9 @@ onUnmounted(() => {
 
 <style scoped>
 .gantt-card {
-  background: var(--md-surface-container);
+  background: var(--card);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  border: 1px solid var(--md-outline-variant);
-  padding: 18px 0 10px 0;
-  margin-top: 12px;
-  margin-bottom: 24px;
-  box-shadow: var(--elev-1);
   overflow: hidden;
 }
 
@@ -677,25 +736,25 @@ onUnmounted(() => {
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 0 18px 14px 18px;
-  border-bottom: 1px solid var(--md-outline-variant);
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
 }
 
 .gantt-title-wrap {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .gantt-card-title {
-  font-size: 1rem;
+  font-size: 17px;
   font-weight: 700;
-  color: var(--md-on-surface);
+  letter-spacing: -0.01em;
 }
 
 .gantt-card-subtitle {
-  font-size: 0.8rem;
-  color: var(--md-on-surface-variant);
-  font-weight: 500;
+  font-size: 13px;
+  color: var(--muted-fg);
   margin-top: 2px;
 }
 
@@ -706,25 +765,26 @@ onUnmounted(() => {
 }
 
 .legend-item {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--md-on-surface-variant);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-fg);
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
+/* Legend swatches match the bar colors below */
 .legend-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
   display: inline-block;
 }
 
-.legend-dot--gacha { background: var(--md-primary); }
-.legend-dot--event { background: #3b82f6; }
-.legend-dot--drop { background: #10b981; }
-.legend-dot--web { background: #f59e0b; }
+.legend-dot--gacha { background: var(--primary); }
+.legend-dot--event { background: var(--chart-event); }
+.legend-dot--drop  { background: var(--chart-drop); }
+.legend-dot--web   { background: var(--chart-web); }
 
 /* Scrollboard Container */
 .gantt-scroll-container {
@@ -749,16 +809,16 @@ onUnmounted(() => {
 .gantt-grid-header {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--md-outline-variant);
-  background: var(--md-surface-container-low);
+  border-bottom: 1px solid var(--border);
+  background: var(--muted);
   position: relative;
 }
 
 .gantt-month-row {
   display: flex;
-  height: 22px;
+  height: 24px;
   position: relative;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border);
 }
 
 .month-header-cell {
@@ -768,12 +828,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--md-on-surface-variant);
-  border-right: 1px solid var(--md-outline-variant);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  border-right: 1px solid var(--border);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -782,7 +840,7 @@ onUnmounted(() => {
 
 .gantt-day-row {
   display: flex;
-  height: 32px;
+  height: 36px;
   position: relative;
 }
 
@@ -794,56 +852,43 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.04);
   pointer-events: none;
   box-sizing: border-box;
 }
 
-.day-header-cell--today {
-  background: color-mix(in srgb, var(--md-primary) 10%, transparent);
-}
-
-.day-header-cell--today .day-name {
-  color: var(--md-primary) !important;
-  opacity: 1 !important;
-  font-weight: 800;
-}
-
-.day-header-cell--today .day-number {
-  color: var(--md-on-primary) !important;
-  background: var(--md-primary);
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 1px;
-}
-
-.day-header-cell--weekend {
-  background: rgba(255, 255, 255, 0.02);
-}
-
 .day-name {
-  font-size: 8px;
-  font-weight: 700;
-  color: var(--md-on-surface-variant);
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.day-header-cell--weekend .day-name {
-  color: var(--md-primary);
-  opacity: 1;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted-fg);
 }
 
 .day-number {
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--md-on-surface);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--fg);
   line-height: 1.1;
   margin-top: 1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.day-header-cell--weekend .day-number {
+  color: var(--muted-fg);
+}
+
+.day-header-cell--today .day-name {
+  color: var(--fg);
+  font-weight: 700;
+}
+
+.day-header-cell--today .day-number {
+  color: var(--primary-fg);
+  background: var(--primary);
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Timeline Content area */
@@ -856,10 +901,7 @@ onUnmounted(() => {
 /* Vertical Grid Lines */
 .gantt-grid-lines {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   pointer-events: none;
   z-index: 1;
 }
@@ -868,21 +910,22 @@ onUnmounted(() => {
   position: absolute;
   top: 0;
   bottom: 0;
-  border-left: 1px solid var(--md-outline-variant);
-  opacity: 0.15;
+  border-left: 1px solid var(--border);
+  opacity: 0.5;
   pointer-events: none;
 }
 
 .grid-line--weekend {
-  background: rgba(255, 255, 255, 0.015);
+  background: color-mix(in srgb, var(--muted) 60%, transparent);
 }
 
-/* Today Highlight Column Block */
+/* Today column: the one place on the board that marks "now" */
 .today-column-block {
   position: absolute;
   top: 0;
   bottom: 0;
-  background: color-mix(in srgb, var(--md-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--primary) 50%, transparent);
   pointer-events: none;
   z-index: 1;
 }
@@ -892,14 +935,12 @@ onUnmounted(() => {
   top: 4px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--md-primary);
-  color: var(--md-on-primary);
-  font-size: 7px;
-  font-weight: 900;
-  text-transform: uppercase;
-  padding: 1px 3px;
-  border-radius: 3px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  background: var(--primary);
+  color: var(--primary-fg);
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
   z-index: 10;
   white-space: nowrap;
 }
@@ -908,18 +949,21 @@ onUnmounted(() => {
 .gantt-section {
   display: flex;
   flex-direction: column;
-  border-bottom: 1px solid var(--md-outline-variant);
+  border-bottom: 1px solid var(--border);
+}
+
+.gantt-section:last-child {
+  border-bottom: none;
 }
 
 .section-label {
-  font-size: 9px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--md-primary);
-  background: var(--md-surface-container-high);
-  padding: 4px 12px;
-  border-bottom: 1px solid var(--md-outline-variant);
+  position: sticky;
+  left: 0;
+  width: max-content;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  padding: 8px 16px 4px;
   z-index: 3;
 }
 
@@ -931,20 +975,14 @@ onUnmounted(() => {
 .gantt-row {
   display: flex;
   align-items: stretch;
-  border-bottom: 1px solid var(--md-outline-variant);
-  min-height: 38px;
+  min-height: 34px;
   position: relative;
-}
-
-.gantt-row:last-child {
-  border-bottom: none;
 }
 
 .gantt-bar-container {
   flex: 1;
   position: relative;
-  background: transparent;
-  padding: 6px 0;
+  padding: 5px 0;
   display: flex;
   align-items: center;
 }
@@ -952,83 +990,76 @@ onUnmounted(() => {
 /* Event Bars */
 .gantt-bar {
   position: absolute;
-  height: 22px;
-  border-radius: var(--radius-xs);
+  height: 24px;
+  border: none;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   padding: 0 8px;
-  font-size: 10px;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
   color: #fff;
   cursor: pointer;
-  transition: transform 0.15s ease, filter 0.15s ease, opacity 0.25s ease;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: filter 0.15s ease, opacity 0.15s ease;
+  /* clip (not hidden) so the bar is not a scroll container and the sticky title below can work */
+  overflow: clip;
   z-index: 2;
 }
 
-/* Faded Style for Past Events */
-.gantt-bar--past {
-  opacity: 0.3;
-  filter: grayscale(1) brightness(0.75);
-}
-
 .gantt-bar:hover {
-  transform: scaleY(1.05);
-  filter: brightness(1.15);
+  filter: brightness(1.1);
   z-index: 4;
 }
 
-.gantt-bar--past:hover {
-  opacity: 0.8;
-  filter: grayscale(0.2) brightness(1.0);
+.gantt-bar:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+  z-index: 4;
 }
 
-/* Auto-Marquee text if name is too long */
+/* The title sticks to the left edge of the visible board, so a bar that
+   starts off-screen still shows its name */
 .bar-title {
-  display: inline-block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  position: sticky;
+  left: 8px;
+  flex-shrink: 0;
   white-space: nowrap;
 }
 
-.gantt-bar--overflowing .bar-title {
-  animation: marquee-scroll 10s linear infinite;
-  display: inline-block;
-  width: auto;
-  text-overflow: clip;
-}
-
-.gantt-bar:hover .bar-title {
-  animation-play-state: paused;
+/* Long names scroll only while the bar is hovered or focused */
+.gantt-bar--overflowing:hover .bar-title,
+.gantt-bar--overflowing:focus-visible .bar-title {
+  animation: marquee-scroll 6s linear infinite;
 }
 
 @keyframes marquee-scroll {
-  0% { transform: translateX(0); }
-  15% { transform: translateX(0); } /* pause at start */
-  45% { transform: translateX(var(--scroll-dist)); }
-  60% { transform: translateX(var(--scroll-dist)); } /* pause at end */
-  90% { transform: translateX(0); }
-  100% { transform: translateX(0); }
+  0%, 15%  { transform: translateX(0); }
+  45%, 60% { transform: translateX(var(--scroll-dist)); }
+  90%, 100% { transform: translateX(0); }
 }
 
-/* Event Types Colors */
+/* Category colors (flat; the legend above uses the same tokens) */
 .gantt-bar--gacha {
-  background: linear-gradient(90deg, var(--md-primary) 0%, color-mix(in srgb, var(--md-primary) 85%, #000) 100%);
-  color: var(--md-on-primary);
+  background: var(--primary);
+  color: var(--primary-fg);
 }
 
-.gantt-bar--event {
-  background: linear-gradient(90deg, hsl(217, 91%, 60%) 0%, hsl(224, 76%, 48%) 100%);
+.gantt-bar--event       { background: var(--chart-event); color: var(--chart-on); }
+.gantt-bar--double-drop { background: var(--chart-drop); color: var(--chart-on); }
+.gantt-bar--web         { background: var(--chart-web); color: #1c1917; }
+
+/* Ended bars step back to the muted surface but keep readable text */
+.gantt-bar.gantt-bar--past {
+  background: var(--muted);
+  color: var(--muted-fg);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 
-.gantt-bar--double-drop {
-  background: linear-gradient(90deg, hsl(160, 84%, 39%) 0%, hsl(163, 94%, 24%) 100%);
-}
-
-.gantt-bar--web {
-  background: linear-gradient(90deg, hsl(38, 92%, 50%) 0%, hsl(32, 95%, 44%) 100%);
+.gantt-bar.gantt-bar--past:hover {
+  filter: none;
+  color: var(--fg);
 }
 
 .gantt-mobile-hint {
@@ -1036,16 +1067,15 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-size: 11px;
-  color: var(--md-on-surface-variant);
-  margin-top: 8px;
-  text-align: center;
+  font-size: 12px;
+  color: var(--muted-fg);
+  padding: 8px 16px 12px;
+  border-top: 1px solid var(--border);
 }
 
 .swipe-icon {
   width: 14px;
   height: 14px;
-  opacity: 0.6;
 }
 
 @media (max-width: 768px) {
@@ -1054,150 +1084,120 @@ onUnmounted(() => {
   }
 }
 
-/* Custom Tooltip Styling */
+/* Tooltip (desktop hover) */
 .gantt-custom-tooltip {
   position: fixed;
   z-index: 9999;
-  background: rgba(16, 16, 24, 0.96);
-  border: 1px solid var(--md-outline);
-  border-radius: var(--radius-lg);
-  padding: 14px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(12px);
-  pointer-events: none;
   width: 280px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-left: 4px solid var(--md-primary);
-  transition: opacity 0.15s ease;
+  padding: 12px;
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-float);
+  pointer-events: none;
 }
 
-.tooltip-badge-row {
+.tooltip-badge-row,
+.modal-badge-row {
   display: flex;
-  justify-content: space-between;
+  gap: 6px;
   align-items: center;
 }
 
 .tooltip-badge {
-  font-size: 9px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 2px 7px;
-  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--fg);
 }
 
-.tooltip-badge--gacha {
-  background: rgba(176, 176, 208, 0.15);
-  color: var(--md-primary);
+/* Type badges carry the same swatch as the legend */
+.tooltip-badge--gacha::before,
+.tooltip-badge--event::before,
+.tooltip-badge--double-drop::before,
+.tooltip-badge--web::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
 }
-.tooltip-badge--event {
-  background: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
-}
-.tooltip-badge--double-drop {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-}
-.tooltip-badge--web {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
+
+.tooltip-badge--gacha::before       { background: var(--primary); }
+.tooltip-badge--event::before       { background: var(--chart-event); }
+.tooltip-badge--double-drop::before { background: var(--chart-drop); }
+.tooltip-badge--web::before         { background: var(--chart-web); }
+
+.tooltip-badge--active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-fg);
 }
 
 .tooltip-badge--ended {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-}
-.tooltip-badge--active {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
-}
-.tooltip-badge--upcoming {
-  background: rgba(249, 115, 22, 0.15);
-  color: #fb923c;
+  background: var(--muted);
+  border-color: var(--muted);
 }
 
 .tooltip-title {
-  font-size: 0.95rem;
+  font-size: 14px;
   font-weight: 700;
-  color: #fff;
   line-height: 1.35;
 }
 
 .tooltip-time {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.03);
-  padding: 8px 10px;
-  border-radius: var(--radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
 }
 
 .tooltip-time-section {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .tooltip-time-heading {
-  font-size: 8px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  letter-spacing: 0.05em;
+  font-size: 12px;
+  color: var(--muted-fg);
 }
 
 .tooltip-time-value {
-  font-size: 10px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .tooltip-desc {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  color: var(--muted-fg);
   line-height: 1.45;
-  margin: 0;
 }
 
-.tooltip-time-section--browser {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 4px;
-  margin-top: 2px;
-}
-
-.tooltip-time-value--browser {
-  color: rgba(147, 204, 255, 0.85);
-}
-
-.modal-time-section--browser {
-  border-top: 1px solid var(--md-outline-variant);
-  padding-top: 8px;
-  margin-top: 4px;
-}
-
-.modal-time-section--browser .modal-time-heading {
-  color: rgba(147, 204, 255, 0.9);
-}
-
-.modal-time-section--browser .modal-time-detail {
-  color: rgba(147, 204, 255, 0.75);
-}
-
-/* Modal Backdrop & Contents */
+/* Dialog */
 .gantt-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(10, 10, 14, 0.7);
-  backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  animation: fadeIn 0.2s ease-out;
+  background: rgb(0 0 0 / 0.5);
+  animation: fadeIn 0.15s ease-out;
 }
 
 @keyframes fadeIn {
@@ -1206,120 +1206,106 @@ onUnmounted(() => {
 }
 
 .gantt-modal-content {
-  background: var(--md-surface-container);
-  border: 1px solid var(--md-outline);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: var(--elev-3);
   position: relative;
-  border-left: 6px solid var(--md-primary);
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  animation: scaleUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes scaleUp {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  padding: 24px;
+  background: var(--card);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-float);
 }
 
 .gantt-modal-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: transparent;
-  border: none;
-  color: var(--md-on-surface-variant);
-  font-size: 24px;
-  font-weight: 500;
-  width: 32px;
-  height: 32px;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--muted-fg);
   transition: background 0.15s ease, color 0.15s ease;
 }
 
+.gantt-modal-close svg {
+  width: 18px;
+  height: 18px;
+}
+
 .gantt-modal-close:hover {
-  background: var(--state-hover);
-  color: var(--md-on-surface);
-}
-
-.gantt-modal-close:active {
-  background: var(--state-pressed);
-}
-
-.modal-badge-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+  background: var(--muted);
+  color: var(--fg);
 }
 
 .modal-title {
-  font-size: 1.15rem;
+  font-size: 18px;
   font-weight: 700;
-  color: #fff;
-  line-height: 1.4;
-  margin-top: 4px;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  padding-right: 32px;
 }
 
 .modal-time-box {
-  background: var(--md-surface-container-low);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--radius-md);
-  padding: 14px 18px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding: 12px 14px;
+  background: var(--muted);
+  border-radius: var(--radius-lg);
 }
 
 .modal-time-section {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+}
+
+.modal-time-section--browser {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
 }
 
 .modal-time-heading {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--md-primary);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-fg);
 }
 
 .modal-time-detail {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--md-on-surface);
-  white-space: pre-wrap;
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .modal-desc-box {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .modal-desc-title {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--md-on-surface-variant);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted-fg);
 }
 
 .modal-desc-text {
-  font-size: 13px;
-  color: var(--md-on-surface);
+  font-size: 14px;
   line-height: 1.5;
 }
 
-/* Modal CTA Link Button */
 .modal-link-box {
-  margin-top: 4px;
   display: flex;
   justify-content: flex-end;
 }
@@ -1328,30 +1314,27 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, var(--md-primary) 0%, color-mix(in srgb, var(--md-primary) 85%, #000) 100%);
-  color: var(--md-on-primary);
-  text-decoration: none;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 20px;
+  height: 36px;
+  padding: 0 14px;
+  background: var(--primary);
+  color: var(--primary-fg);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.15s ease;
 }
 
 .modal-link-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
-  filter: brightness(1.08);
-}
-
-.modal-link-button:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: color-mix(in srgb, var(--primary) 88%, var(--bg));
 }
 
 .external-link-icon {
   width: 14px;
   height: 14px;
+}
+
+/* Touch screens get 44px tap targets */
+@media (pointer: coarse) {
+  .gantt-modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
 }
 </style>

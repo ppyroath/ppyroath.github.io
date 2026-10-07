@@ -1,0 +1,128 @@
+/* Shared layout for the Tools tabs on both game pages */
+
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tool {
+  overflow: hidden;
+}
+
+.tool__header {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tool__title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tool__desc {
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--muted-fg);
+}
+
+.tool__body {
+  padding: 16px;
+}
+
+.tool__split {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 720px) {
+  .tool__split {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+.tool__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.subheading {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.note {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--muted);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--muted-fg);
+}
+
+/* Result panel: the answer is the focal point of each tool */
+.result {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--primary-soft);
+  align-self: start;
+}
+
+.result__label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-fg);
+}
+
+.result__value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+}
+
+.result__sub {
+  font-size: 13px;
+  color: var(--muted-fg);
+}
+
+.result__list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
+}
+
+.result__list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.result__list dt {
+  color: var(--muted-fg);
+}
+
+.result__list dd {
+  font-weight: 600;
+  text-align: right;
+}

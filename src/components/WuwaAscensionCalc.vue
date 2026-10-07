@@ -1,184 +1,114 @@
 <template>
-  <div class="tool-card asc-card">
-    
-    <div class="asc-layout">
-      <!-- Left Column: Inputs -->
-      <div class="asc-inputs">
-        <h2 class="tool-title">Resonator Ascension & Forte Calculator</h2>
-        <p class="tool-desc mb-4">Calculate materials needed to level up characters and their skills.</p>
-        
-        <!-- Level Goal -->
-        <div class="section-box">
-          <h3 class="section-title">LEVEL GOAL</h3>
+  <Card class="tool">
+    <div class="tool__header">
+      <h2 class="tool__title">Resonator ascension and Forte calculator</h2>
+      <p class="tool__desc">Materials needed to level a Resonator and their skills.</p>
+    </div>
+
+    <div class="tool__body tool__split">
+      <div class="tool__inputs">
+        <fieldset class="group">
+          <legend class="subheading">Level</legend>
           <div class="form-grid">
-            <div class="input-group">
-              <label>Current Level</label>
-              <select v-model.number="state.currentLevel">
+            <div class="field">
+              <label for="asc-current-level">Current</label>
+              <select id="asc-current-level" class="select tabular" v-model.number="state.currentLevel">
                 <option v-for="opt in levelOptions" :key="`c_${opt}`" :value="opt">{{ opt }}</option>
               </select>
             </div>
-            <div class="input-group">
-              <label>Target Level</label>
-              <select v-model.number="state.targetLevel">
+            <div class="field">
+              <label for="asc-target-level">Target</label>
+              <select id="asc-target-level" class="select tabular" v-model.number="state.targetLevel">
                 <option v-for="opt in levelOptions" :key="`t_${opt}`" :value="opt">{{ opt }}</option>
               </select>
             </div>
           </div>
-        </div>
+        </fieldset>
 
-        <!-- Forte Levels -->
-        <div class="section-box">
-          <h3 class="section-title">FORTE (TALENT) LEVELS</h3>
-          <p class="info-text mb-4">5 skills: Basic Attack, Resonance Skill, Resonance Liberation, Forte Circuit, Intro Skill. Each goes 1 → 10.</p>
-          
-          <div class="forte-grid" v-for="(forte, key) in forteDefs" :key="key">
-            <div class="forte-label">{{ forte.label }}</div>
-            <div class="form-grid">
-              <div class="input-group">
-                <label>current</label>
-                <select v-model.number="state[key].current">
-                  <option v-for="opt in forteOptions" :key="`fc_${opt}`" :value="opt">Lv. {{ opt }}</option>
-                </select>
-              </div>
-              <div class="input-group">
-                <label>target</label>
-                <select v-model.number="state[key].target">
-                  <option v-for="opt in forteOptions" :key="`ft_${opt}`" :value="opt">Lv. {{ opt }}</option>
-                </select>
-              </div>
+        <fieldset class="group">
+          <legend class="subheading">Forte levels</legend>
+          <div class="forte-table">
+            <div class="forte-row forte-row--head" aria-hidden="true">
+              <span></span><span>Current</span><span>Target</span>
+            </div>
+            <div class="forte-row" v-for="(forte, key) in forteDefs" :key="key">
+              <span class="forte-name">{{ forte.label }}</span>
+              <select class="select tabular" v-model.number="state[key].current" :aria-label="`${forte.label} current level`">
+                <option v-for="opt in forteOptions" :key="`fc_${opt}`" :value="opt">Lv. {{ opt }}</option>
+              </select>
+              <select class="select tabular" v-model.number="state[key].target" :aria-label="`${forte.label} target level`">
+                <option v-for="opt in forteOptions" :key="`ft_${opt}`" :value="opt">Lv. {{ opt }}</option>
+              </select>
             </div>
           </div>
+        </fieldset>
 
-          <h3 class="section-title mt-4 mb-2">BONUS STATS & INHERENT SKILLS</h3>
+        <fieldset class="group">
+          <legend class="subheading">Bonus stats and inherent skills</legend>
           <div class="form-grid">
-            <div class="input-group">
-              <label>Stat Bonus 1 Nodes (Max 4)</label>
-              <select v-model.number="state.statBonus1Nodes">
-                <option v-for="n in 5" :key="`sb1_${n-1}`" :value="n-1">{{ n-1 }}</option>
+            <div class="field">
+              <label for="asc-sb1">Stat bonus 1 nodes</label>
+              <select id="asc-sb1" class="select tabular" v-model.number="state.statBonus1Nodes">
+                <option v-for="n in 5" :key="`sb1_${n-1}`" :value="n-1">{{ n-1 }} of 4</option>
               </select>
             </div>
-            <div class="input-group">
-              <label>Stat Bonus 2 Nodes (Max 4)</label>
-              <select v-model.number="state.statBonus2Nodes">
-                <option v-for="n in 5" :key="`sb2_${n-1}`" :value="n-1">{{ n-1 }}</option>
+            <div class="field">
+              <label for="asc-sb2">Stat bonus 2 nodes</label>
+              <select id="asc-sb2" class="select tabular" v-model.number="state.statBonus2Nodes">
+                <option v-for="n in 5" :key="`sb2_${n-1}`" :value="n-1">{{ n-1 }} of 4</option>
               </select>
             </div>
           </div>
-          
-          <div class="checkbox-group mt-3">
-            <label class="checkbox-label">
+          <div class="checks">
+            <label class="checkbox">
               <input type="checkbox" v-model="state.inherentSkill1" />
-              Unlock Inherent Skill 1
+              Unlock inherent skill 1
             </label>
-            <label class="checkbox-label">
+            <label class="checkbox">
               <input type="checkbox" v-model="state.inherentSkill2" />
-              Unlock Inherent Skill 2
+              Unlock inherent skill 2
             </label>
           </div>
-        </div>
+        </fieldset>
       </div>
 
-      <!-- Right Column: Output -->
-      <div class="asc-outputs">
-        <h3 class="section-title mb-4">TOTAL MATERIALS NEEDED</h3>
-        
-        <!-- Currency & Potions -->
-        <div class="result-group">
-          <div class="result-group-title">CURRENCY & POTIONS</div>
-          <div class="result-item">
-            <span class="res-label">Shell Credits</span>
-            <span class="res-val highlight">{{ result.shellCredits.toLocaleString() }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Resonator XP</span>
-            <span class="res-val highlight">{{ result.characterXp.toLocaleString() }}</span>
-          </div>
-          <div class="result-item" v-if="result.potions.premium > 0">
-            <span class="res-label">Premium Resonance Potion</span>
-            <span class="res-val">{{ result.potions.premium }}</span>
-          </div>
-          <div class="result-item" v-if="result.potions.advanced > 0">
-            <span class="res-label">Advanced Resonance Potion</span>
-            <span class="res-val">{{ result.potions.advanced }}</span>
-          </div>
-          <div class="result-item" v-if="result.potions.medium > 0">
-            <span class="res-label">Medium Resonance Potion</span>
-            <span class="res-val">{{ result.potions.medium }}</span>
-          </div>
-          <div class="result-item" v-if="result.potions.basic > 0">
-            <span class="res-label">Basic Resonance Potion</span>
-            <span class="res-val">{{ result.potions.basic }}</span>
-          </div>
-        </div>
+      <div class="result" aria-live="polite">
+        <p class="result__label">Shell Credits</p>
+        <p class="result__value tabular">{{ result.shellCredits.toLocaleString() }}</p>
+        <p class="result__sub tabular">{{ result.characterXp.toLocaleString() }} Resonator XP</p>
 
-        <!-- Ascension -->
-        <div class="result-group">
-          <div class="result-group-title">ASCENSION</div>
-          <div class="result-item">
-            <span class="res-label">Specialty (regional)</span>
-            <span class="res-val">{{ result.specialty }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Boss Drop</span>
-            <span class="res-val">{{ result.bossDrop }}</span>
-          </div>
-        </div>
+        <dl class="result__list tabular" v-if="hasPotions">
+          <div v-if="result.potions.premium > 0"><dt>Premium Resonance Potion</dt><dd>{{ result.potions.premium }}</dd></div>
+          <div v-if="result.potions.advanced > 0"><dt>Advanced Resonance Potion</dt><dd>{{ result.potions.advanced }}</dd></div>
+          <div v-if="result.potions.medium > 0"><dt>Medium Resonance Potion</dt><dd>{{ result.potions.medium }}</dd></div>
+          <div v-if="result.potions.basic > 0"><dt>Basic Resonance Potion</dt><dd>{{ result.potions.basic }}</dd></div>
+        </dl>
 
-        <!-- Common Drops -->
-        <div class="result-group">
-          <div class="result-group-title">COMMON DROPS (LEVEL + FORTE)</div>
-          <div class="result-item">
-            <span class="res-label">LF (Tier 1)</span>
-            <span class="res-val">{{ result.commonDrops.t1 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">MF (Tier 2)</span>
-            <span class="res-val">{{ result.commonDrops.t2 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">HF (Tier 3)</span>
-            <span class="res-val">{{ result.commonDrops.t3 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">FF (Tier 4)</span>
-            <span class="res-val">{{ result.commonDrops.t4 }}</span>
-          </div>
-        </div>
+        <h3 class="result__group">Ascension</h3>
+        <dl class="result__list result__list--tight tabular">
+          <div><dt>Regional specialty</dt><dd>{{ result.specialty }}</dd></div>
+          <div><dt>Boss drop</dt><dd>{{ result.bossDrop }}</dd></div>
+        </dl>
 
-        <!-- Forte Skill Materials -->
-        <div class="result-group">
-          <div class="result-group-title">FORTE SKILL MATERIALS</div>
-          <div class="result-item">
-            <span class="res-label">Skill Material (T1)</span>
-            <span class="res-val">{{ result.forteDrops.t1 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Skill Material (T2)</span>
-            <span class="res-val">{{ result.forteDrops.t2 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Skill Material (T3)</span>
-            <span class="res-val">{{ result.forteDrops.t3 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Skill Material (T4)</span>
-            <span class="res-val">{{ result.forteDrops.t4 }}</span>
-          </div>
-          <div class="result-item">
-            <span class="res-label">Weekly Boss Drop</span>
-            <span class="res-val">{{ result.weeklyBossDrop }}</span>
-          </div>
-        </div>
+        <h3 class="result__group">Common drops (level and Forte)</h3>
+        <dl class="result__list result__list--tight tabular">
+          <div><dt>LF, tier 1</dt><dd>{{ result.commonDrops.t1 }}</dd></div>
+          <div><dt>MF, tier 2</dt><dd>{{ result.commonDrops.t2 }}</dd></div>
+          <div><dt>HF, tier 3</dt><dd>{{ result.commonDrops.t3 }}</dd></div>
+          <div><dt>FF, tier 4</dt><dd>{{ result.commonDrops.t4 }}</dd></div>
+        </dl>
 
-        <!-- Summary -->
-        <div class="summary-box">
-          Total: {{ result.shellCredits.toLocaleString() }} Shell Credits, 
-          {{ result.characterXp.toLocaleString() }} Resonator XP.
-        </div>
-
+        <h3 class="result__group">Forte materials</h3>
+        <dl class="result__list result__list--tight tabular">
+          <div><dt>Skill material, tier 1</dt><dd>{{ result.forteDrops.t1 }}</dd></div>
+          <div><dt>Skill material, tier 2</dt><dd>{{ result.forteDrops.t2 }}</dd></div>
+          <div><dt>Skill material, tier 3</dt><dd>{{ result.forteDrops.t3 }}</dd></div>
+          <div><dt>Skill material, tier 4</dt><dd>{{ result.forteDrops.t4 }}</dd></div>
+          <div><dt>Weekly boss drop</dt><dd>{{ result.weeklyBossDrop }}</dd></div>
+        </dl>
       </div>
     </div>
-  </div>
+  </Card>
 </template>
 
 <script setup lang="ts">
@@ -189,6 +119,7 @@ import {
   calculateAscensionMaterials, 
   type AscensionCalcState 
 } from '../utils/wuwa_ascension_calc';
+import Card from './ui/Card.vue';
 
 const levelOptions = WUWA_LEVEL_OPTIONS;
 const forteOptions = WUWA_FORTE_OPTIONS;
@@ -226,204 +157,59 @@ const result = computed(() => {
   
   return calculateAscensionMaterials(safeState);
 });
+
+const hasPotions = computed(() => {
+  const p = result.value.potions;
+  return p.premium + p.advanced + p.medium + p.basic > 0;
+});
 </script>
 
+<style scoped src="./tools.css"></style>
 <style scoped>
-.asc-card {
-  padding: 0;
-  overflow: hidden;
+.group {
+  border: none;
+  min-width: 0;
 }
 
-.asc-layout {
+.forte-table {
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
-.asc-inputs {
-  padding: 20px;
-  flex: 1;
-}
-
-.asc-outputs {
-  background: var(--md-surface-container-high);
-  padding: 20px;
-  border-top: 1px solid var(--md-outline-variant);
-  flex: 0.8;
-}
-
-@media (min-width: 768px) {
-  .asc-layout {
-    flex-direction: row;
-  }
-  .asc-outputs {
-    border-top: none;
-    border-left: 1px solid var(--md-outline-variant);
-  }
-}
-
-.tool-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--md-on-surface);
-  margin-bottom: 4px;
-}
-
-.tool-desc {
-  font-size: 0.85rem;
-  color: var(--md-on-surface-variant);
-}
-
-.mb-4 {
-  margin-bottom: 16px;
-}
-
-.section-box {
-  background: var(--md-surface-container-high);
-  border: 1px solid var(--md-outline-variant);
-  border-radius: var(--radius-md);
-  padding: 16px;
-  margin-bottom: 16px;
-}
-
-.section-title {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--wuwa-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-
-.info-text {
-  font-size: 0.75rem;
-  color: var(--md-on-surface-variant);
-  line-height: 1.4;
-}
-
-.form-grid {
+.forte-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.input-group label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--md-on-surface-variant);
-}
-
-.input-group select {
-  background: var(--md-surface-container);
-  border: 1px solid var(--md-outline);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  color: var(--md-on-surface);
-  font-size: 0.9rem;
-  outline: none;
-  cursor: pointer;
-}
-
-.input-group select:focus {
-  border-color: var(--wuwa-primary);
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.checkbox-label {
-  display: flex;
+  grid-template-columns: minmax(0, 1.3fr) 1fr 1fr;
   align-items: center;
   gap: 8px;
-  font-size: 0.85rem;
+}
+
+.forte-row--head {
+  font-size: 12px;
   font-weight: 600;
-  color: var(--md-on-surface);
-  cursor: pointer;
+  color: var(--muted-fg);
 }
 
-.checkbox-label input {
-  accent-color: var(--wuwa-primary);
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+.forte-name {
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.mt-3 {
-  margin-top: 12px;
-}
-
-.mt-4 {
-  margin-top: 20px;
-}
-
-.mb-2 {
-  margin-bottom: 8px;
-}
-
-.forte-grid {
-  margin-bottom: 16px;
-}
-
-.forte-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--md-on-surface);
-  margin-bottom: 8px;
-}
-
-/* Outputs */
-.result-group {
-  margin-bottom: 16px;
-}
-
-.result-group-title {
-  font-size: 0.7rem;
-  color: var(--md-on-surface-variant);
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.result-item {
+.checks {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--md-surface-container);
-  padding: 10px 12px;
-  border-radius: var(--radius-sm);
-  margin-bottom: 4px;
-  font-size: 0.85rem;
+  flex-direction: column;
+  margin-top: 10px;
 }
 
-.res-label {
-  color: var(--md-on-surface);
-  font-weight: 600;
-}
-
-.res-val {
-  color: var(--pgr-primary); /* Uses similar cyan color from PGR for consistency or wuwa primary */
+.result__group {
+  margin-top: 16px;
+  font-size: 13px;
   font-weight: 700;
 }
 
-.res-val.highlight {
-  color: var(--wuwa-primary);
-}
-
-.summary-box {
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.2);
-  padding: 12px;
-  border-radius: var(--radius-sm);
-  font-size: 0.8rem;
-  color: var(--md-on-surface);
-  line-height: 1.5;
-  margin-top: 24px;
+.result__list--tight {
+  margin-top: 6px;
+  padding-top: 0;
+  border-top: none;
 }
 </style>

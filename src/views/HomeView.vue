@@ -1,242 +1,223 @@
 <template>
   <div class="home">
+    <header class="home-intro">
+      <h1 class="home-title">Pyroath</h1>
+      <p class="home-lead">Event timers, server resets and patch schedules for Wuthering Waves and Punishing: Gray Raven.</p>
+    </header>
 
-    <!-- Hero -->
-    <div class="home-hero">
-      <img :src="pyroathIcon" class="hero-logo" alt="Pyroath logo" />
-      <h1 class="hero-title">Pyroath</h1>
-      <p class="hero-subtitle">Patch info tracker for WuWa &amp; PGR</p>
-    </div>
+    <ul class="game-list">
+      <li v-for="game in games" :key="game.key">
+        <router-link :to="game.path" class="game-row" :class="`game-row--${game.key}`">
+          <span class="game-row__icon">
+            <span class="logo-mask" :class="`logo-mask--${game.key}`" aria-hidden="true"></span>
+          </span>
+          <span class="game-row__body">
+            <span class="game-row__name">{{ game.name }}</span>
+            <span v-if="game.patch" class="game-row__patch">{{ game.patch }}</span>
+          </span>
+          <span class="game-row__meta tabular">
+            {{ game.running === 0 ? 'Nothing running' : `${game.running} running` }}
+          </span>
+          <svg class="game-row__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </router-link>
+      </li>
+    </ul>
 
-    <!-- Game Navigation Cards -->
-    <div class="game-cards">
-
-      <router-link to="/wuwa" class="game-card game-card--wuwa">
-        <div class="game-card__icon-wrap">
-          <span class="logo-mask logo-mask--wuwa game-card__icon" aria-hidden="true"></span>
-        </div>
-        <div class="game-card__body">
-          <div class="game-card__name">Wuthering Waves</div>
-          <div class="game-card__cta">View events</div>
-        </div>
-        <svg class="game-card__arrow" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </router-link>
-
-      <router-link to="/pgr" class="game-card game-card--pgr">
-        <div class="game-card__icon-wrap">
-          <span class="logo-mask logo-mask--pgr game-card__icon" aria-hidden="true"></span>
-        </div>
-        <div class="game-card__body">
-          <div class="game-card__name">Punishing: Gray Raven</div>
-          <div class="game-card__cta">View events</div>
-        </div>
-        <svg class="game-card__arrow" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-        </svg>
-      </router-link>
-
-    </div>
-
-    <!-- Credits -->
-    <div class="credits">
-      <p>
-        Made with
-        <img :src="vueLogo" alt="Vue" class="credit-logo" />
-        by <a href="https://vermilion10.pages.dev/" target="_blank" rel="noopener noreferrer">vermilion10</a>
-      </p>
-    </div>
-
+    <footer class="credits">
+      Made with
+      <img :src="vueLogo" alt="Vue" class="credit-logo" />
+      by <a href="https://vermilion10.pages.dev/" target="_blank" rel="noopener noreferrer">vermilion10</a>.
+      Preceded by <a href="https://pgrnow.github.io" target="_blank" rel="noopener noreferrer">PGRNow</a>.
+    </footer>
   </div>
 </template>
 
 <script setup lang="ts">
-import pyroathIcon from '../assets/images/pyroath.svg';
+import { computed } from 'vue';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import vueLogo from '../assets/vue-logo.svg';
+import { wuwaEvents } from '../data/wuwaEvents';
+import { pgrEvents } from '../data/pgrEvents';
+import { wuwaTimelineData } from '../data/wuwaTimeline';
+import { pgrTimelineData } from '../data/pgrTimeline';
+import type { GameEvent } from '../data/pgrEvents';
+import type { PatchTimeline } from '../data/wuwaTimeline';
+
+dayjs.extend(utc);
+
+const now = dayjs();
+const isRunning = (start: string, end: string) =>
+  now.isAfter(dayjs.utc(start)) && now.isBefore(dayjs.utc(end));
+
+const countRunning = (events: GameEvent[]) =>
+  events.filter(e => isRunning(e.startTime, e.endTime)).length;
+
+const currentPatch = (timeline: PatchTimeline[]) =>
+  (timeline.find(p => isRunning(p.startTime, p.endTime)) ?? timeline[0])?.patchName;
+
+const games = computed(() => [
+  {
+    key: 'wuwa',
+    path: '/wuwa',
+    name: 'Wuthering Waves',
+    patch: currentPatch(wuwaTimelineData),
+    running: countRunning(wuwaEvents),
+  },
+  {
+    key: 'pgr',
+    path: '/pgr',
+    name: 'Punishing: Gray Raven',
+    patch: currentPatch(pgrTimelineData),
+    running: countRunning(pgrEvents),
+  },
+]);
 </script>
 
 <style scoped>
 .home {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  min-height: calc(100vh - 80px);
-  padding: 24px 0 16px;
+  gap: 28px;
+  max-width: 560px;
+  margin: 0 auto;
 }
 
-.home-hero {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 36px;
-  text-align: center;
-}
-
-.hero-logo {
-  width: 72px;
-  height: 72px;
-  object-fit: contain;
-  filter: drop-shadow(0 0 18px rgba(103, 212, 248, 0.25));
-}
-
-.hero-title {
+.home-title {
   font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--md-on-surface);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
 }
 
-.hero-subtitle {
-  font-size: 0.9rem;
-  color: var(--md-on-surface-variant);
-  font-weight: 500;
+.home-lead {
+  margin-top: 8px;
+  font-size: 15px;
+  color: var(--muted-fg);
+  max-width: 44ch;
 }
 
-.game-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-  max-width: 420px;
-}
-
-.game-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px;
+.game-list {
+  list-style: none;
+  border: 1px solid var(--border);
   border-radius: var(--radius-xl);
-  text-decoration: none;
-  color: var(--md-on-surface);
-  background: var(--md-surface-container);
-  border: 1px solid var(--md-outline-variant);
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  position: relative;
+  background: var(--card);
   overflow: hidden;
 }
 
-.game-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
+.game-list li + li {
+  border-top: 1px solid var(--border);
 }
 
-.game-card--wuwa::before {
-  background: radial-gradient(circle at left center, rgba(103, 212, 248, 0.1), transparent 60%);
+.game-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  min-height: 72px;
+  transition: background 0.15s ease;
 }
 
-.game-card--pgr::before {
-  background: radial-gradient(circle at left center, rgba(242, 139, 130, 0.1), transparent 60%);
+.game-row:hover {
+  background: var(--muted);
 }
 
-.game-card:hover::before {
-  opacity: 1;
+.game-row:focus-visible {
+  outline-offset: -2px;
 }
 
-.game-card:hover {
-  background: var(--md-surface-container-high);
-  transform: translateY(-1px);
-  box-shadow: var(--elev-2);
-}
-
-.game-card__icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
+.game-row__icon {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 64px;
+  height: 44px;
   flex-shrink: 0;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
 }
 
-.game-card--wuwa .game-card__icon-wrap {
-  background: var(--wuwa-primary-container);
-  color: var(--wuwa-primary);
+.game-row__icon .logo-mask {
+  width: 52px;
+  height: 30px;
 }
 
-.game-card--pgr .game-card__icon-wrap {
-  background: var(--pgr-primary-container);
-  color: var(--pgr-primary);
-}
+.game-row--wuwa .game-row__icon { color: var(--wuwa); }
+.game-row--pgr .game-row__icon  { color: var(--pgr); }
 
-.game-card__icon {
-  width: 26px;
-  height: 26px;
-}
-
-.game-card__body {
+.game-row__body {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.game-card__name {
-  font-size: 0.95rem;
+.game-row__name {
   font-weight: 700;
-  color: var(--md-on-surface);
-  line-height: 1.3;
+  font-size: 15px;
 }
 
-.game-card__cta {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--md-on-surface-variant);
-  margin-top: 2px;
+.game-row__patch {
+  font-size: 13px;
+  color: var(--muted-fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.game-card__arrow {
-  width: 20px;
-  height: 20px;
-  color: var(--md-on-surface-dim);
+.game-row__meta {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-fg);
+  white-space: nowrap;
+}
+
+.game-row__chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--muted-fg);
   flex-shrink: 0;
-  transition: transform 0.2s ease, color 0.2s ease;
 }
 
-.game-card:hover .game-card__arrow {
-  color: var(--md-on-surface-variant);
-  transform: translateX(2px);
+@media (max-width: 480px) {
+  .game-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+      "icon body chevron"
+      "icon meta chevron";
+    row-gap: 2px;
+  }
+  .game-row__icon    { grid-area: icon; }
+  .game-row__body    { grid-area: body; }
+  .game-row__meta    { grid-area: meta; font-weight: 500; }
+  .game-row__chevron { grid-area: chevron; }
 }
 
 .credits {
-  margin-top: auto;
-  padding-top: 32px;
-}
-
-.credits p {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
-  color: var(--md-on-surface-variant);
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--muted-fg);
 }
 
 .credits a {
-  color: var(--md-on-surface-variant);
+  color: var(--fg);
   font-weight: 600;
   text-decoration: underline;
-  text-underline-offset: 2px;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border);
 }
 
 .credits a:hover {
-  color: var(--md-on-surface);
+  text-decoration-color: currentColor;
 }
 
 .credit-logo {
-  height: 14px;
+  height: 13px;
   width: auto;
-  vertical-align: middle;
-  opacity: 0.7;
-}
-
-.logo-mask--wuwa {
-  -webkit-mask-image: url('../assets/images/wuwa-logo.svg');
-  mask-image: url('../assets/images/wuwa-logo.svg');
-}
-.logo-mask--pgr {
-  -webkit-mask-image: url('../assets/images/pgr-logo.svg');
-  mask-image: url('../assets/images/pgr-logo.svg');
+  vertical-align: -1px;
 }
 </style>

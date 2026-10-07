@@ -1,20 +1,18 @@
 <template>
-  <div class="server-time-card">
-    <div class="time-grid">
-      <div class="time-item">
-        <span class="time-label">{{ config.name }} Server</span>
-        <span class="time-value">{{ serverTime }}</span>
-      </div>
-      <div class="time-item">
-        <span class="time-label">Local Reset</span>
-        <span class="time-value">{{ localResetTime }}</span>
-      </div>
-      <div class="time-item">
-        <span class="time-label">Reset In</span>
-        <span class="time-value time-value--accent">{{ timeUntilReset }}</span>
-      </div>
+  <dl class="server-time">
+    <div class="stat">
+      <dt class="stat__label">{{ config.name }} server time</dt>
+      <dd class="stat__value tabular">{{ serverTime }}</dd>
     </div>
-  </div>
+    <div class="stat">
+      <dt class="stat__label">Daily reset, your time</dt>
+      <dd class="stat__value tabular">{{ localResetTime }}</dd>
+    </div>
+    <div class="stat stat--focus">
+      <dt class="stat__label">Reset in</dt>
+      <dd class="stat__value tabular">{{ timeUntilReset }}</dd>
+    </div>
+  </dl>
 </template>
 
 <script setup lang="ts">
@@ -85,51 +83,51 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.server-time-card {
-  background: var(--md-surface-container);
-  border-radius: var(--radius-xl);
-  padding: 20px 16px;
-  margin-bottom: 16px;
-  box-shadow: var(--elev-1);
-}
-
-.time-grid {
+.server-time {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--card);
 }
 
-.time-item {
+.stat {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
+  padding: 14px 16px;
+  min-width: 0;
 }
 
-.time-label {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--md-on-surface-variant);
-  line-height: 1.2;
+.stat + .stat {
+  border-left: 1px solid var(--border);
 }
 
-.time-value {
-  font-size: 1.25rem;
+.stat__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted-fg);
+  line-height: 1.3;
+}
+
+.stat__value {
+  font-size: 1.375rem;
   font-weight: 700;
-  color: var(--md-on-surface);
   letter-spacing: -0.02em;
   line-height: 1.1;
 }
 
-.time-value--accent {
-  color: var(--md-primary);
+/* The reset countdown is what people open the page for */
+.stat--focus .stat__value {
+  color: var(--primary);
 }
 
-@media (max-width: 360px) {
-  .time-value {
-    font-size: 1rem;
+@media (max-width: 480px) {
+  .stat {
+    padding: 12px;
+  }
+  .stat__value {
+    font-size: 1.05rem;
   }
 }
 </style>
