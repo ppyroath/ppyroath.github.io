@@ -60,7 +60,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Withering Crown",
     startTime: "2026-02-03T05:00:00Z",
     endTime: "2026-03-16T01:59:59Z",
-    image: new URL('../assets/pgr/images/withering-crown.png', import.meta.url).href,
+    image: new URL('../assets/pgr/images/withering-crown.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/4130",
     description: "New story chapter, new frame: Arete, Steam version release. Click for more details."
   },
@@ -380,7 +380,7 @@ export const pgrEvents: GameEvent[] = [
     name: "Kowloong Metropolis",
     startTime: "2021-12-22T09:00:00Z",
     endTime: "2022-01-25T01:59:59Z",
-    image: new URL('../assets/pgr/images/kowloong-metropolis.png', import.meta.url).href,
+    image: new URL('../assets/pgr/images/kowloong-metropolis.webp', import.meta.url).href,
     link: "https://youtu.be/D5WGCSZNmuE?si=EKFvJeCzSdaxTF8o",
     description: "New story chapter, new frames: Plume. Click for more details."
   },
