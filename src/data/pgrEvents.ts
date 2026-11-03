@@ -9,9 +9,17 @@ export interface GameEvent {
 
 export const pgrEvents: GameEvent[] = [
   {
+    name: "A Comet's Afterglow",
+    startTime: "2026-11-03T17:17:59Z",
+    endTime: "2026-12-15T17:17:59Z",
+    image: "https://media-cdn-zspms.kurogame.net/pnswebsite/website2.0/images/1793635200000/joac90a9tdqkoqvq6l-1793697823276.png",
+    link: "https://pgr.kurogame.net/news/5686",
+    description: "A Comet's Afterglow update. Click for more details."
+  },
+  {
     name: "Anchored in Faith",
     startTime: "2026-09-24T05:00:00Z",
-    endTime: "2026-11-04T23:00:00Z",
+    endTime: "2026-11-03T17:17:59Z",
     image: new URL('../assets/pgr/images/anchored-in-faith.webp', import.meta.url).href,
     link: "https://pgr.kurogame.net/news/5466",
     description: "New story chapter, new frame: Anabasis, Date A Live collab with Kurumi Tokisaki. Click for more details."
