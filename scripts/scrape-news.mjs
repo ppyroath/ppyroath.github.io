@@ -89,7 +89,14 @@ function titleCase(str) {
 }
 
 function stripHtml(html) {
-  return html.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  return html
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&ndash;/g, '–')
+    .replace(/&mdash;/g, '—')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
 // PGR pattern: "...version update on June 2, 2026, from 05:00 to 11:00 (UTC)"
@@ -98,9 +105,20 @@ function extractStartTimePGR(articleContent) {
   const text = stripHtml(articleContent);
   const re = /version update on\s+([A-Z][a-z]+\s+\d{1,2},\s*\d{4}),?\s*from\s*(\d{1,2}:\d{2})\s*to\s*(\d{1,2}:\d{2})\s*\(UTC\)/i;
   const m = text.match(re);
-  if (!m) return null;
-  const [, dateStr, , endTime] = m;
-  const iso = new Date(`${dateStr} ${endTime}:00 UTC`);
+  if (m) {
+    const [, dateStr, , endTime] = m;
+    const iso = new Date(`${dateStr} ${endTime}:00 UTC`);
+    if (!Number.isNaN(iso.getTime())) return iso.toISOString().replace(/\.\d{3}Z$/, 'Z');
+  }
+
+  // Newer format (A Comet's Afterglow, id 5686):
+  // "...version update on 2026/11/4, 23:00 - 2026/11/5, 05:00 (UTC)"
+  // The separator may be a hyphen, en dash, or em dash.
+  const reSlash = /version update on\s+\d{4}\/\d{1,2}\/\d{1,2},?\s*\d{1,2}:\d{2}\s*[-–—~]\s*(\d{4})\/(\d{1,2})\/(\d{1,2}),?\s*(\d{1,2}):(\d{2})\s*\(UTC\)/i;
+  const s = text.match(reSlash);
+  if (!s) return null;
+  const [, y, mo, d, h, mi] = s.map(Number);
+  const iso = new Date(Date.UTC(y, mo - 1, d, h, mi, 0));
   if (Number.isNaN(iso.getTime())) return null;
   return iso.toISOString().replace(/\.\d{3}Z$/, 'Z');
 }
