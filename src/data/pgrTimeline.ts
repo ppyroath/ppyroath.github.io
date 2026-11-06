@@ -2,6 +2,105 @@ import type { PatchTimeline } from './wuwaTimeline';
 
 export const pgrTimelineData: PatchTimeline[] = [
   {
+  patchName: "A Comet's Afterglow",
+  patchVersion: "Global",
+  startTime: "2026-11-05T05:00:00Z",
+  endTime: "2026-12-16T23:00:00Z",
+  events: [
+  {
+    name: 'Leia: Fortunaster S-Rank Omniframe',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'gacha',
+    description: '100% chance to get Leia: Fortunaster upon getting an S-Rank Omniframe in the Themed Construct and Fate Themed Construct Research Pools.'
+  },
+  {
+    name: 'Edges of the Twisted Ribbon 6★ Weapon',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'gacha',
+    description: 'Fortunaster Exclusive 6★ Weapon available through the Target Weapon Research Pool.'
+  },
+  {
+    name: 'Vulpecula S-Rank CUB',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'gacha',
+    description: '100% chance to get Vulpecula upon getting an S-Rank CUB in the CUB Target Research Pool.'
+  },
+  {
+    name: 'Expedition Supply Research',
+    startTime: '2026-11-12T10:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'gacha',
+    description: 'Independent pool using Expedition R&D Tickets (exchanged from Event Construct or Target Weapon R&D Tickets). Core reward: S-Rank Omniframe Choice Pack up to Selena: Pianissimo.'
+  },
+  {
+    name: 'New and Rerun Coatings',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'gacha',
+    description: 'New: Brilliant Instant (Leia: Fortunaster), Cradled Moonfrost (Ishmael: Parhelion). Rerun: Sanguine Justice (Vera: Geiravor), Starward Dragon (Nanami: Startrail).'
+  },
+  {
+    name: 'Main Story: A Comet\'s Afterglow',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'event',
+    description: 'New Main Story chapter. Requires clearing Main Story 1-12.'
+  },
+  {
+    name: 'Tactical Assessment Manual: The Light\'s Respite File',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'event',
+    description: 'Complete rating missions to grant Intel Value and unlock rewards, including Generic - Final Alternate Coating for Leia: Fortunaster.'
+  },
+  {
+    name: 'Endeavorer\'s Charm: Character Trial Stage',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T23:00:00Z',
+    type: 'event',
+    description: 'Trial Stage for Leia: Fortunaster to learn basic controls and earn collectibles and training materials.'
+  },
+  {
+    name: '7-Day Sign-in Rewards',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T05:00:00Z',
+    type: 'event',
+    description: 'Sign in for 7 days total during the event to claim all rewards including Basic Construct R&D Tickets.'
+  },
+  {
+    name: 'Dreamhouse Tycoon',
+    startTime: '2026-11-05T05:00:00Z',
+    endTime: '2026-12-16T05:00:00Z',
+    type: 'event',
+    description: 'Manage the Kuroro Building to earn Dream Funds and complete Building Orders. Rewards include Event Construct R&D Ticket x2,000 and Trade Voucher x2,000.'
+  },
+  {
+    name: 'Astral Obscura: Boss Challenge',
+    startTime: '2026-11-06T10:00:00Z',
+    endTime: '2026-11-30T05:00:00Z',
+    type: 'event',
+    description: 'High-difficulty challenge consisting of 5 distinct difficulty tiers against the Boss Polarized Pterygota Queen.'
+  },
+  {
+    name: 'Dreamscape Disequilibrium',
+    startTime: '2026-11-12T10:00:00Z',
+    endTime: '2026-12-16T05:00:00Z',
+    type: 'event',
+    description: 'Explore Leia\'s spiritual world and balance Wish Weights against Cost Weights across 6 Normal and 5 Hard stages.'
+  },
+  {
+    name: 'Munchy Pixels',
+    startTime: '2026-11-19T10:00:00Z',
+    endTime: '2026-12-16T05:00:00Z',
+    type: 'event',
+    description: 'Control Leia to dodge viruses and collect pixel beans across 9 stages.'
+  }
+]
+},
+  {
   patchName: "Anchored in Faith",
   patchVersion: "Global",
   startTime: "2026-09-24T05:00:00Z",
